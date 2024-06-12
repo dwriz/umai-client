@@ -12,7 +12,7 @@ import {
 
 export default function RegisterScreen({ navigation }) {
   const [fullname, setFullname] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,7 +25,7 @@ export default function RegisterScreen({ navigation }) {
         },
         body: JSON.stringify({
           fullname,
-          nickname,
+          username,
           email,
           password,
         }),
@@ -56,10 +56,10 @@ export default function RegisterScreen({ navigation }) {
       />
       <TextInput
         style={styles.input}
-        placeholder="Nickname"
+        placeholder="Username"
         autoCapitalize="words"
-        value={nickname}
-        onChangeText={setNickname}
+        value={username}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
