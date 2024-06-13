@@ -18,7 +18,7 @@ export default function RegisterScreen({ navigation }) {
 
   async function handleRegister() {
     try {
-      const response = await fetch("http://localhost:3000/register", {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

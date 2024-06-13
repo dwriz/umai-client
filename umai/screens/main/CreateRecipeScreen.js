@@ -173,7 +173,7 @@ export default function CreateRecipeScreen({ navigation }) {
   const handleSubmitRecipe = async () => {
     try {
       const token = await AsyncStorage.getItem("access_token");
-      const response = await fetch("http://localhost:3000/recipe", {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/recipe`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

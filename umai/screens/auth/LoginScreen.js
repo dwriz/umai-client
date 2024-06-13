@@ -19,7 +19,7 @@ export default function LoginScreen({ navigation }) {
 
   async function handleLogin() {
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
