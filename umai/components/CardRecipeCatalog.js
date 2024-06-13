@@ -1,18 +1,19 @@
-// components/CardRecipeCatalog.js
-
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ImageBackground, View } from "react-native";
 
-export default function CardRecipeCatalogr({ recipe, onPress }) {
+export default function CardRecipeCatalog({ recipe, onPress }) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Text style={styles.cardTitle}>{recipe.name}</Text>
-      <Text style={styles.cardText}>
-        Ingredients: {recipe.ingredients.length}
-      </Text>
-      <Text style={styles.cardText}>
-        Instructions: {recipe.instructions.length}
-      </Text>
+      <ImageBackground
+        source={{ uri: recipe.imgUrl }}
+        style={styles.imageBackground}
+        imageStyle={styles.image}
+      >
+        <View style={styles.overlay} />
+        <Text style={styles.cardTitle}>{recipe.name}</Text>
+        <Text style={styles.cardText}>Ingredients: {recipe.ingredients.length}</Text>
+        <Text style={styles.cardText}>Instructions: {recipe.instructions.length}</Text>
+      </ImageBackground>
     </TouchableOpacity>
   );
 }
@@ -20,26 +21,32 @@ export default function CardRecipeCatalogr({ recipe, onPress }) {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    margin: 10,
-    padding: 15,
-    backgroundColor: "#f8f8f8",
+    marginVertical: 5,
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    overflow: "hidden",
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 15,
+  },
+  image: {
+    borderRadius: 10,
+    opacity: 0.3,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    borderRadius: 10,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+    color: "#fff",
   },
   cardText: {
     fontSize: 14,
-    color: "#666",
+    color: "#fff",
   },
 });

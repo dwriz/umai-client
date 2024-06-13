@@ -1,15 +1,9 @@
-// screens/main/RecipeCatalogScreen.js
-
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 import CardRecipeCatalog from "../../components/CardRecipeCatalog";
 
-export default function RecipeCatalogScreen() {
+export default function RecipeCatalogScreen({ navigation }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,23 +13,27 @@ export default function RecipeCatalogScreen() {
 
   async function fetchRecipes() {
     try {
-      const response = await fetch("http://localhost:3000/recipes");
+      const token = await AsyncStorage.getItem("access_token");
+
+      const response = await fetch("http://localhost:3000/recipes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       const data = await response.json();
+
       setRecipes(data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching recipes:", error);
+      
       setLoading(false);
     }
   }
 
   function renderRecipe({ item }) {
-    return (
-      <CardRecipeCatalog
-        recipe={item}
-        onPress={() => console.log("Pressed", item.name)}
-      />
-    );
+    return <CardRecipeCatalog recipe={item} />;
   }
 
   if (loading) {
@@ -51,8 +49,7 @@ export default function RecipeCatalogScreen() {
       <FlatList
         data={recipes}
         renderItem={renderRecipe}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
+        keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={styles.listContainer}
       />
     </View>

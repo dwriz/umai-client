@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from "../context/AuthContext.js";
 import RecipeCatalogScreen from "../screens/main/RecipeCatalogScreen.js";
-import StoreScreen from "../screens/main/StoreScreen.js";
+import CreateRecipeScreen from "../screens/main/CreateRecipeScreen.js";
 import FeedScreen from "../screens/main/FeedScreen.js";
 import ProfileScreen from "../screens/main/ProfileScreen.js";
 import RankScreen from "../screens/main/RankScreen.js";
@@ -20,6 +20,7 @@ export default function BottomTabNavigator() {
   async function handleLogout() {
     try {
       await AsyncStorage.removeItem("access_token");
+
       setIsLoggedIn(false);
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -43,7 +44,7 @@ export default function BottomTabNavigator() {
             case "RecipeCatalog":
               iconName = "fast-food";
               break;
-            case "StoreScreen":
+            case "CreateRecipeScreen":
               iconName = "cart";
               break;
             case "FeedScreen":
@@ -55,14 +56,13 @@ export default function BottomTabNavigator() {
             case "RankScreen":
               iconName = "trophy";
               break;
-            
           }
 
           return <Ionicons name={iconName} />;
         },
       })}
     >
-      <Tab.Screen name="StoreScreen" component={StoreScreen} />
+      <Tab.Screen name="CreateRecipeScreen" component={CreateRecipeScreen} />
       <Tab.Screen name="FeedScreen" component={FeedScreen} />
       <Tab.Screen name="RecipeCatalog" component={RecipeCatalogScreen} />
       <Tab.Screen name="RankScreen" component={RankScreen} />
