@@ -15,11 +15,14 @@ export default function RecipeCatalogScreen({ navigation }) {
     try {
       const token = await AsyncStorage.getItem("access_token");
 
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/recipes`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/recipes`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
 
@@ -27,7 +30,7 @@ export default function RecipeCatalogScreen({ navigation }) {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching recipes:", error);
-      
+
       setLoading(false);
     }
   }

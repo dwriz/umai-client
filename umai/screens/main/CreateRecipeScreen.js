@@ -87,10 +87,7 @@ export default function CreateRecipeScreen({ navigation }) {
   };
 
   const handleAddMoreInstructions = () => {
-    setInstructionCards([
-      ...instructionCards,
-      { description: "", imgUrl: "" },
-    ]);
+    setInstructionCards([...instructionCards, { description: "", imgUrl: "" }]);
     setTimeout(() => {
       scrollViewRefInstructions.current.scrollToEnd({ animated: true });
     }, 100);
@@ -173,19 +170,22 @@ export default function CreateRecipeScreen({ navigation }) {
   const handleSubmitRecipe = async () => {
     try {
       const token = await AsyncStorage.getItem("access_token");
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/recipe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name,
-          imgUrl,
-          ingredients,
-          instructions,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/recipe`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name,
+            imgUrl,
+            ingredients,
+            instructions,
+          }),
+        }
+      );
 
       if (response.ok) {
         Alert.alert("Success", "Recipe submitted successfully!", [
