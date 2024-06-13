@@ -1,11 +1,11 @@
 // screens/main/FeedScreen.js
 
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StyleSheet, Text, View } from "react-native";
+import CardFeed from "../../components/CardFeed";
 export default function FeedScreen() {
   return (
     <View style={styles.container}>
-      <Text>FeedScreen</Text>
+      <CardFeed />
     </View>
   );
 }
@@ -13,8 +13,6 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
   },
 });
