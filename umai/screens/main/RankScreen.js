@@ -1,11 +1,12 @@
 // screens/main/RankScreen.js
 
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from "react-native";
+import RankCard from "../../components/RankCard";
 
 export default function RankScreen() {
   return (
     <View style={styles.container}>
-      <Text>RankScreen</Text>
+      <RankCard />
     </View>
   );
 }
@@ -13,8 +14,8 @@ export default function RankScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
 });
