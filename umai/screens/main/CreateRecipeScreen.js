@@ -12,15 +12,19 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 export default function CreateRecipeScreen({ navigation }) {
   const [name, setName] = useState("");
   const [imgUrl, setImgUrl] = useState("");
   const [ingredients, setIngredients] = useState([]);
-  const [ingredientCards, setIngredientCards] = useState([{ id: 0, value: "" }]);
+  const [ingredientCards, setIngredientCards] = useState([
+    { id: 0, value: "" },
+  ]);
   const [instructions, setInstructions] = useState([]);
-  const [instructionCards, setInstructionCards] = useState([{ description: "", imgUrl: "" }]);
+  const [instructionCards, setInstructionCards] = useState([
+    { description: "", imgUrl: "" },
+  ]);
   const [currentCard, setCurrentCard] = useState(0);
 
   const firstCardAnimation = useRef(new Animated.Value(0)).current;
@@ -31,11 +35,12 @@ export default function CreateRecipeScreen({ navigation }) {
   const scrollViewRef = useRef();
   const scrollViewRefInstructions = useRef();
 
-  const handleFirstCardSubmit = () => {
+  function handleFirstCardSubmit() {
     if (name.trim() === "") {
       Alert.alert("Name cannot be empty!");
       return;
     }
+
     Animated.timing(firstCardAnimation, {
       toValue: -300,
       duration: 300,
@@ -50,16 +55,19 @@ export default function CreateRecipeScreen({ navigation }) {
         useNativeDriver: true,
       }).start();
     });
-  };
+  }
 
-  const pickImage = async (source) => {
+  async function pickImage(source, instructionIndex = null) {
     let result;
+
     if (source === "camera") {
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
-      if (status !== 'granted') {
+
+      if (status !== "granted") {
         Alert.alert("Permission to access camera is required!");
         return;
       }
+
       result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -67,11 +75,14 @@ export default function CreateRecipeScreen({ navigation }) {
         quality: 1,
       });
     } else {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (status !== "granted") {
         Alert.alert("Permission to access gallery is required!");
         return;
       }
+
       result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -81,16 +92,26 @@ export default function CreateRecipeScreen({ navigation }) {
     }
 
     if (!result.canceled) {
-      setImgUrl(result.assets[0].uri);
-      handleSecondCardSubmit(result.assets[0].uri);
-    }
-  };
+      if (instructionIndex === null) {
+        setImgUrl(result.assets[0].uri);
 
-  const handleSecondCardSubmit = (selectedImgUrl) => {
+        handleSecondCardSubmit(result.assets[0].uri);
+      } else {
+        handleInstructionChange(
+          instructionIndex,
+          "imgUrl",
+          result.assets[0].uri
+        );
+      }
+    }
+  }
+
+  function handleSecondCardSubmit(selectedImgUrl) {
     if ((selectedImgUrl || imgUrl).trim() === "") {
       Alert.alert("Image URL cannot be empty!");
       return;
     }
+
     Animated.timing(secondCardAnimation, {
       toValue: -300,
       duration: 300,
@@ -98,6 +119,7 @@ export default function CreateRecipeScreen({ navigation }) {
       useNativeDriver: true,
     }).start(() => {
       setCurrentCard(2);
+
       Animated.timing(thirdCardAnimation, {
         toValue: 0,
         duration: 300,
@@ -105,45 +127,63 @@ export default function CreateRecipeScreen({ navigation }) {
         useNativeDriver: true,
       }).start();
     });
-  };
+  }
 
-  const handleAddMoreIngredients = () => {
-    setIngredientCards([...ingredientCards, { id: ingredientCards.length, value: "" }]);
+  function handleAddMoreIngredients() {
+    setIngredientCards([
+      ...ingredientCards,
+      { id: ingredientCards.length, value: "" },
+    ]);
+
     setTimeout(() => {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }, 100);
-  };
+  }
 
-  const handleAddMoreInstructions = () => {
+  function handleAddMoreInstructions() {
     setInstructionCards([...instructionCards, { description: "", imgUrl: "" }]);
+
     setTimeout(() => {
       scrollViewRefInstructions.current.scrollToEnd({ animated: true });
     }, 100);
-  };
+  }
 
-  const handleIngredientChange = (id, value) => {
-    setIngredientCards(ingredientCards.map((card) => card.id === id ? { ...card, value } : card));
-  };
+  function handleIngredientChange(id, value) {
+    setIngredientCards(
+      ingredientCards.map((card) =>
+        card.id === id ? { ...card, value } : card
+      )
+    );
+  }
 
-  const handleInstructionChange = (index, key, value) => {
-    setInstructionCards(instructionCards.map((card, i) => i === index ? { ...card, [key]: value } : card));
-  };
+  function handleInstructionChange(index, key, value) {
+    setInstructionCards(
+      instructionCards.map((card, i) =>
+        i === index ? { ...card, [key]: value } : card
+      )
+    );
+  }
 
-  const handleRemoveIngredient = (id) => {
+  function handleRemoveIngredient(id) {
     setIngredientCards(ingredientCards.filter((card) => card.id !== id));
-  };
+  }
 
-  const handleRemoveInstruction = (index) => {
+  function handleRemoveInstruction(index) {
     setInstructionCards(instructionCards.filter((_, i) => i !== index));
-  };
+  }
 
-  const handleIngredientsSubmit = () => {
-    const hasEmptyIngredient = ingredientCards.some((card) => card.value.trim() === "");
+  function handleIngredientsSubmit() {
+    const hasEmptyIngredient = ingredientCards.some(
+      (card) => card.value.trim() === ""
+    );
+
     if (hasEmptyIngredient) {
       Alert.alert("No empty ingredient allowed!");
       return;
     }
+
     setIngredients(ingredientCards.map((card) => card.value));
+
     Animated.timing(thirdCardAnimation, {
       toValue: -300,
       duration: 300,
@@ -151,6 +191,7 @@ export default function CreateRecipeScreen({ navigation }) {
       useNativeDriver: true,
     }).start(() => {
       setCurrentCard(3);
+
       Animated.timing(fourthCardAnimation, {
         toValue: 0,
         duration: 300,
@@ -158,17 +199,20 @@ export default function CreateRecipeScreen({ navigation }) {
         useNativeDriver: true,
       }).start();
     });
-  };
+  }
 
-  const handleInstructionsSubmit = () => {
+  function handleInstructionsSubmit() {
     const hasEmptyInstruction = instructionCards.some(
       (card) => card.description.trim() === "" || card.imgUrl.trim() === ""
     );
+
     if (hasEmptyInstruction) {
       Alert.alert("No empty instruction fields allowed!");
       return;
     }
+
     setInstructions(instructionCards);
+
     Animated.timing(fourthCardAnimation, {
       toValue: -300,
       duration: 300,
@@ -176,6 +220,7 @@ export default function CreateRecipeScreen({ navigation }) {
       useNativeDriver: true,
     }).start(() => {
       setCurrentCard(4);
+
       Animated.timing(fifthCardAnimation, {
         toValue: 0,
         duration: 300,
@@ -183,32 +228,49 @@ export default function CreateRecipeScreen({ navigation }) {
         useNativeDriver: true,
       }).start();
     });
-  };
+  }
 
-  const handleSubmitRecipe = async () => {
+  async function handleSubmitRecipe() {
     try {
       const token = await AsyncStorage.getItem("access_token");
 
       const formData = new FormData();
+
       formData.append("name", name);
       formData.append("ingredients", JSON.stringify(ingredients));
       formData.append("instructions", JSON.stringify(instructions));
 
       const imageFile = {
         uri: imgUrl,
-        name: 'photo.jpg',
-        type: 'image/jpeg',
+        name: "photo.jpg",
+        type: "image/jpeg",
       };
+
       formData.append("image", imageFile);
 
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/recipe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
+      instructionCards.forEach((instruction, index) => {
+        if (instruction.imgUrl) {
+          const instructionImageFile = {
+            uri: instruction.imgUrl,
+            name: `instruction_photo_${index + 1}.jpg`,
+            type: "image/jpeg",
+          };
+
+          formData.append(`instruction_images`, instructionImageFile);
+        }
       });
+
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/recipe`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         Alert.alert("Success", "Recipe submitted successfully!", [
@@ -216,13 +278,15 @@ export default function CreateRecipeScreen({ navigation }) {
         ]);
       } else {
         const errorData = await response.json();
+
         Alert.alert("Error", errorData.message || "Failed to submit recipe");
       }
     } catch (error) {
-      console.error(error.message)
+      console.error(error.message);
+
       Alert.alert("Error", error.message);
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -344,14 +408,20 @@ export default function CreateRecipeScreen({ navigation }) {
                     handleInstructionChange(index, "description", value)
                   }
                 />
-                <TextInput
-                  style={styles.input}
-                  placeholder={`Enter image URL for step ${index + 1}`}
-                  value={card.imgUrl}
-                  onChangeText={(value) =>
-                    handleInstructionChange(index, "imgUrl", value)
-                  }
-                />
+                <View style={styles.imgButtonsContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => pickImage("camera", index)}
+                  >
+                    <Text style={styles.buttonText}>Take Photo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => pickImage("gallery", index)}
+                  >
+                    <Text style={styles.buttonText}>Upload Photo</Text>
+                  </TouchableOpacity>
+                </View>
                 {index > 0 && (
                   <TouchableOpacity
                     style={styles.removeButton}
@@ -485,6 +555,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   instructionCard: {
+    width: "100%",
+    marginBottom: 10,
+  },
+  imgButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     width: "100%",
     marginBottom: 10,
   },
