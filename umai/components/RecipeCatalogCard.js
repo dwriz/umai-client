@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, ImageBackground, View } from "react-native";
 
-export default function CardRecipeCatalog({ recipe, onPress }) {
+export default function RecipeCatalogCard({ recipe, onPress }) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <ImageBackground

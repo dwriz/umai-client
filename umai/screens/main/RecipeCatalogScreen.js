@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
-import CardRecipeCatalog from "../../components/CardRecipeCatalog";
+import RecipeCatalogCard from "../../components/RecipeCatalogCard";
 
 export default function RecipeCatalogScreen({ navigation }) {
   const [recipes, setRecipes] = useState([]);
@@ -36,7 +36,7 @@ export default function RecipeCatalogScreen({ navigation }) {
   }
 
   function renderRecipe({ item }) {
-    return <CardRecipeCatalog recipe={item} />;
+    return <RecipeCatalogCard recipe={item} />;
   }
 
   if (loading) {

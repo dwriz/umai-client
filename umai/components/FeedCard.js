@@ -55,7 +55,7 @@ const Header = () => (
   </View>
 );
 
-export default function CardFeed() {
+export default function FeedCard() {
   const renderItem = ({ item }) => (
     <View style={styles.postContainer}>
       <View style={styles.postHeader}>

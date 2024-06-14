@@ -1,11 +1,11 @@
 // screens/main/FeedScreen.js
 
 import { StyleSheet, Text, View } from "react-native";
-import CardFeed from "../../components/CardFeed";
+import FeedCard from "../../components/FeedCard";
 export default function FeedScreen() {
   return (
     <View style={styles.container}>
-      <CardFeed />
+      <FeedCard />
     </View>
   );
 }
