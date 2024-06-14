@@ -15,32 +15,35 @@ const data = [
     user: "User 1",
     time: "10 mins ago",
     content: "Content 1",
-    imageUrl: "https://example.com/image1.jpg",
-    profileImageUrl: "https://example.com/profile1.jpg",
+    imageUrl: "https://www.themealdb.com/images/media/meals/1548772327.jpg",
+    profileImageUrl: "https://randomuser.me/api/portraits/men/3.jpg",
   },
   {
     id: "2",
     user: "User 2",
     time: "20 mins ago",
     content: "Content 2",
-    imageUrl: "https://example.com/image2.jpg",
-    profileImageUrl: "https://example.com/profile2.jpg",
+    imageUrl:
+      "https://www.themealdb.com/images/media/meals/sypxpx1515365095.jpg",
+    profileImageUrl: "https://randomuser.me/api/portraits/men/3.jpg",
   },
   {
     id: "3",
     user: "User 3",
     time: "30 mins ago",
     content: "Content 3",
-    imageUrl: "https://example.com/image3.jpg",
-    profileImageUrl: "https://example.com/profile3.jpg",
+    imageUrl:
+      "https://www.themealdb.com/images/media/meals/wvpsxx1468256321.jpg",
+    profileImageUrl: "https://randomuser.me/api/portraits/men/3.jpg",
   },
   {
     id: "4",
     user: "User 4",
     time: "40 mins ago",
     content: "Content 4",
-    imageUrl: "https://example.com/image4.jpg",
-    profileImageUrl: "https://example.com/profile4.jpg",
+    imageUrl:
+      "https://www.themealdb.com/images/media/meals/g046bb1663960946.jpg",
+    profileImageUrl: "https://randomuser.me/api/portraits/men/3.jpg",
   },
 ];
 
@@ -107,29 +110,31 @@ export default function FeedCard() {
   );
 
   return (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      ListHeaderComponent={Header}
-    />
+    <View style={styles.container}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={Header}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f3e9a9",
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#d4d768",
   },
   headerButton: {
     padding: 10,
-    backgroundColor: "#FF7F50",
+    backgroundColor: "#536e2c",
     borderRadius: 5,
     alignItems: "center",
   },
@@ -139,18 +144,17 @@ const styles = StyleSheet.create({
   },
   headerButtonRecipes: {
     padding: 10,
-    backgroundColor: "#fff",
     borderRadius: 5,
     alignItems: "center",
   },
   headerButtonTextRecipes: {
-    color: "#FF7F50",
+    color: "black",
     fontWeight: "bold",
   },
   postContainer: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomColor: "grey",
   },
   postHeader: {
     flexDirection: "row",
@@ -168,7 +172,7 @@ const styles = StyleSheet.create({
   },
   postUser: {
     fontWeight: "bold",
-    color: "#FF7F50",
+    color: "black",
   },
   postTime: {
     color: "#666",
