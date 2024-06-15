@@ -559,7 +559,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   imgButtonsContainer: {
-    flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
     marginBottom: 10,
