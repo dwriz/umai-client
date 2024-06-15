@@ -1,5 +1,3 @@
-// screens/main/ProfileScreen.js
-
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function ProfileScreen() {

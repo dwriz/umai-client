@@ -1,5 +1,3 @@
-// screens/main/RankScreen.js
-
 import { StyleSheet, Text, View } from "react-native";
 import RankCard from "../../components/RankCard";
 

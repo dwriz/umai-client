@@ -1,5 +1,3 @@
-// App.js
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MainStack from "./navigators/MainStack";

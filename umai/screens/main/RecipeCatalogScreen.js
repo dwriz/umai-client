@@ -14,7 +14,6 @@ export default function RecipeCatalogScreen({ navigation }) {
   async function fetchRecipes() {
     try {
       const token = await AsyncStorage.getItem("access_token");
-
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_BASE_URL}/recipes`,
         {
@@ -23,20 +22,22 @@ export default function RecipeCatalogScreen({ navigation }) {
           },
         }
       );
-
       const data = await response.json();
-
       setRecipes(data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching recipes:", error);
-
       setLoading(false);
     }
   }
 
   function renderRecipe({ item }) {
-    return <RecipeCatalogCard recipe={item} />;
+    return (
+      <RecipeCatalogCard
+        recipe={item}
+        onPress={() => navigation.navigate("Tutorial", { recipe: item })}
+      />
+    );
   }
 
   if (loading) {

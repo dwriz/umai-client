@@ -1,5 +1,3 @@
-// screens/main/FeedScreen.js
-
 import { StyleSheet, Text, View } from "react-native";
 import FeedCard from "../../components/FeedCard";
 export default function FeedScreen() {
