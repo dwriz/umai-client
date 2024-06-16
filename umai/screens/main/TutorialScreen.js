@@ -94,6 +94,21 @@ export default function TutorialScreen({ route, navigation }) {
     }
   }
 
+  async function incrementFinishedRecipeCount() {
+    try {
+      const token = await AsyncStorage.getItem("access_token");
+      
+      await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/finished-recipe`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  }
+
   async function handleSubmitPost(imageUri) {
     try {
       setLoading(true);
@@ -120,6 +135,8 @@ export default function TutorialScreen({ route, navigation }) {
 
       if (response.ok) {
         alert("Post submitted successfully!");
+
+        incrementFinishedRecipeCount();
 
         navigation.navigate("RecipeCatalog");
       } else {
@@ -199,6 +216,7 @@ export default function TutorialScreen({ route, navigation }) {
               style={styles.modalButton}
               onPress={() => {
                 setModalVisible(false);
+                incrementFinishedRecipeCount();
                 navigation.navigate("RecipeCatalog");
               }}
             >
