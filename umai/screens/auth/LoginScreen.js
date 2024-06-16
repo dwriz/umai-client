@@ -7,6 +7,11 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Modal,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -14,8 +19,10 @@ export default function LoginScreen({ navigation }) {
   const { setIsLoggedIn } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
+    setLoading(true);
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/login`, {
         method: "POST",
@@ -32,9 +39,7 @@ export default function LoginScreen({ navigation }) {
         const data = await response.json();
         const { access_token } = data;
         await AsyncStorage.setItem("access_token", access_token);
-        Alert.alert("Success", "Login successful!", [
-          { text: "OK" },
-        ]);
+        Alert.alert("Success", "Login successful!", [{ text: "OK" }]);
         setIsLoggedIn(true);
       } else {
         const errorData = await response.json();
@@ -42,38 +47,60 @@ export default function LoginScreen({ navigation }) {
       }
     } catch (error) {
       Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login Screen</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        autoCapitalize="none"
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity style={styles.submitButton} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.registerButton}
-        onPress={() => navigation.navigate("Register")}
-      >
-        <Text style={styles.registerButtonText}>Register</Text>
-      </TouchableOpacity>
-    </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={90}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.title}>Login Screen</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
+          editable={!loading}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          autoCapitalize="none"
+          value={password}
+          onChangeText={setPassword}
+          editable={!loading}
+        />
+        <TouchableOpacity
+          style={[styles.submitButton, loading && styles.disabledButton]}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.registerButton, loading && styles.disabledButton]}
+          onPress={() => navigation.navigate("Register")}
+          disabled={loading}
+        >
+          <Text style={styles.registerButtonText}>Register</Text>
+        </TouchableOpacity>
+        {loading && (
+          <Modal transparent={true} animationType="none" visible={loading}>
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#FF7F50" />
+            </View>
+          </Modal>
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -81,6 +108,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  scrollContainer: {
+    flexGrow: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
@@ -107,6 +137,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
   },
+  disabledButton: {
+    backgroundColor: "#ccc",
+  },
   buttonText: {
     color: "#fff",
     fontSize: 16,
@@ -118,5 +151,10 @@ const styles = StyleSheet.create({
     color: "#FF7F50",
     fontSize: 16,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
 });
-
