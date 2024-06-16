@@ -150,9 +150,6 @@ export default function TutorialScreen({ route, navigation }) {
           <TouchableOpacity style={styles.button} onPress={handleStartCooking}>
             <Text style={styles.buttonText}>Start Cooking</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Donate to Creator</Text>
-          </TouchableOpacity>
         </Animated.View>
       )}
 
