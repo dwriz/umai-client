@@ -128,6 +128,8 @@ export default function TutorialScreen({ route, navigation }) {
         alert("Error: " + (errorData.message || "Failed to submit post"));
       }
     } catch (error) {
+      setModalVisible(true);
+
       alert("Error: " + error.message);
     } finally {
       setLoading(false);
