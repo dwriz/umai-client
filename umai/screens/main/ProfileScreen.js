@@ -5,11 +5,12 @@ import {
   View,
   Image,
   ImageBackground,
+  Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
-export default function Profile() {
+export default function Profile({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -26,7 +27,7 @@ export default function Profile() {
           <Text style={styles.text2SubContainer2}>Username</Text>
         </View>
         <View style={styles.subContainer2}>
-        <Ionicons name="settings" size={24} color="black" />
+          <Ionicons name="settings" size={24} color="black" />
         </View>
       </View>
       {/* container untuk text Recipe */}
@@ -35,22 +36,29 @@ export default function Profile() {
       </View>
       {/* container untuk card */}
       <View style={styles.container3}>
-        <ImageBackground
-          style={styles.imageContainer3}
-          source={{
-            uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+        <Pressable
+          onPress={() => {
+            navigation.navigate("ProfileRecipeScreen");
           }}
-          imageStyle={{ borderRadius: 20 }}
         >
-          <LinearGradient
-            colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-            start={{x: 0, y: 1}}
-            end={{x: 0, y: 0}}
-            style={styles.gradient}
+          <ImageBackground
+            style={styles.imageContainer3}
+            source={{
+              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+            }}
+            imageStyle={{ borderRadius: 20 }}
           >
-            <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-          </LinearGradient>
-        </ImageBackground>
+            <LinearGradient
+              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
+            </LinearGradient>
+          </ImageBackground>
+        </Pressable>
+
         <Image
           style={styles.imageContainer3}
           source={{
@@ -80,30 +88,30 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   container1: {
-    flex: 19/20,
+    flex: 19 / 20,
     flexDirection: "row",
     backgroundColor: "#d4d768",
   },
   subContainer1: {
     flex: 1,
-    backgroundColor: "#d4d768"
+    backgroundColor: "#d4d768",
   },
   text1SubContainer1: {
     marginTop: 6,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   text2SubContainer2: {
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   subContainer2: {
     flex: 1,
     backgroundColor: "#d4d768",
     marginTop: 15,
     marginRight: 10,
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   container2: {
-    flex: 2/3,
+    flex: 2 / 3,
     backgroundColor: "#f3e9a9",
   },
   textContainer2: {
@@ -111,7 +119,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 20,
     marginLeft: 25,
-    fontWeight: "bold"
+    fontWeight: "bold",
     // justifyContent: "center",
     // textAlign: "center",
   },
@@ -141,7 +149,7 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     borderRadius: 20,
   },
   textAbsoluteContainer3: {
@@ -153,6 +161,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     justifyContent: "center",
     textAlign: "center",
-    color: "white"
+    color: "white",
   },
 });
