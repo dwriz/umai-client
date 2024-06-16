@@ -1,14 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
-  Animated,
-  Easing,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,221 +19,54 @@ import * as ImagePicker from "expo-image-picker";
 export default function CreateRecipeScreen({ navigation }) {
   const [name, setName] = useState("");
   const [imgUrl, setImgUrl] = useState("");
-  const [ingredients, setIngredients] = useState([]);
-  const [ingredientCards, setIngredientCards] = useState([
-    { id: 0, value: "" },
-  ]);
-  const [instructions, setInstructions] = useState([]);
-  const [instructionCards, setInstructionCards] = useState([
+  const [ingredients, setIngredients] = useState([""]);
+  const [instructions, setInstructions] = useState([
     { description: "", imgUrl: "" },
   ]);
-  const [currentCard, setCurrentCard] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const firstCardAnimation = useRef(new Animated.Value(0)).current;
-  const secondCardAnimation = useRef(new Animated.Value(300)).current;
-  const thirdCardAnimation = useRef(new Animated.Value(600)).current;
-  const fourthCardAnimation = useRef(new Animated.Value(900)).current;
-  const fifthCardAnimation = useRef(new Animated.Value(1200)).current;
-  const scrollViewRef = useRef();
-  const scrollViewRefInstructions = useRef();
-
-  function handleFirstCardSubmit() {
-    if (name.trim() === "") {
-      Alert.alert("Name cannot be empty!");
-      return;
-    }
-
-    Animated.timing(firstCardAnimation, {
-      toValue: -300,
-      duration: 300,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start(() => {
-      setCurrentCard(1);
-      Animated.timing(secondCardAnimation, {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.ease,
-        useNativeDriver: true,
-      }).start();
+  async function pickImage(setImage) {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
-  }
-
-  async function pickImage(source, instructionIndex = null) {
-    let result;
-
-    if (source === "camera") {
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-
-      if (status !== "granted") {
-        Alert.alert("Permission to access camera is required!");
-        return;
-      }
-
-      result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    } else {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (status !== "granted") {
-        Alert.alert("Permission to access gallery is required!");
-        return;
-      }
-
-      result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    }
 
     if (!result.canceled) {
-      if (instructionIndex === null) {
-        setImgUrl(result.assets[0].uri);
-
-        handleSecondCardSubmit(result.assets[0].uri);
-      } else {
-        handleInstructionChange(
-          instructionIndex,
-          "imgUrl",
-          result.assets[0].uri
-        );
-      }
+      setImage(result.assets[0].uri);
     }
   }
 
-  function handleSecondCardSubmit(selectedImgUrl) {
-    if ((selectedImgUrl || imgUrl).trim() === "") {
-      Alert.alert("Image URL cannot be empty!");
-      return;
-    }
-
-    Animated.timing(secondCardAnimation, {
-      toValue: -300,
-      duration: 300,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start(() => {
-      setCurrentCard(2);
-
-      Animated.timing(thirdCardAnimation, {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.ease,
-        useNativeDriver: true,
-      }).start();
+  async function takePhoto(setImage) {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
-  }
 
-  function handleAddMoreIngredients() {
-    setIngredientCards([
-      ...ingredientCards,
-      { id: ingredientCards.length, value: "" },
-    ]);
-
-    setTimeout(() => {
-      scrollViewRef.current.scrollToEnd({ animated: true });
-    }, 100);
-  }
-
-  function handleAddMoreInstructions() {
-    setInstructionCards([...instructionCards, { description: "", imgUrl: "" }]);
-
-    setTimeout(() => {
-      scrollViewRefInstructions.current.scrollToEnd({ animated: true });
-    }, 100);
-  }
-
-  function handleIngredientChange(id, value) {
-    setIngredientCards(
-      ingredientCards.map((card) =>
-        card.id === id ? { ...card, value } : card
-      )
-    );
-  }
-
-  function handleInstructionChange(index, key, value) {
-    setInstructionCards(
-      instructionCards.map((card, i) =>
-        i === index ? { ...card, [key]: value } : card
-      )
-    );
-  }
-
-  function handleRemoveIngredient(id) {
-    setIngredientCards(ingredientCards.filter((card) => card.id !== id));
-  }
-
-  function handleRemoveInstruction(index) {
-    setInstructionCards(instructionCards.filter((_, i) => i !== index));
-  }
-
-  function handleIngredientsSubmit() {
-    const hasEmptyIngredient = ingredientCards.some(
-      (card) => card.value.trim() === ""
-    );
-
-    if (hasEmptyIngredient) {
-      Alert.alert("No empty ingredient allowed!");
-      return;
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
     }
-
-    setIngredients(ingredientCards.map((card) => card.value));
-
-    Animated.timing(thirdCardAnimation, {
-      toValue: -300,
-      duration: 300,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start(() => {
-      setCurrentCard(3);
-
-      Animated.timing(fourthCardAnimation, {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.ease,
-        useNativeDriver: true,
-      }).start();
-    });
-  }
-
-  function handleInstructionsSubmit() {
-    const hasEmptyInstruction = instructionCards.some(
-      (card) => card.description.trim() === "" || card.imgUrl.trim() === ""
-    );
-
-    if (hasEmptyInstruction) {
-      Alert.alert("No empty instruction fields allowed!");
-      return;
-    }
-
-    setInstructions(instructionCards);
-
-    Animated.timing(fourthCardAnimation, {
-      toValue: -300,
-      duration: 300,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start(() => {
-      setCurrentCard(4);
-
-      Animated.timing(fifthCardAnimation, {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.ease,
-        useNativeDriver: true,
-      }).start();
-    });
   }
 
   async function handleSubmitRecipe() {
+    if (
+      !name ||
+      !imgUrl ||
+      ingredients.some((ingredient) => !ingredient) ||
+      instructions.some(
+        (instruction) => !instruction.description || !instruction.imgUrl
+      )
+    ) {
+      Alert.alert("Error", "Please fill out all fields");
+
+      return;
+    }
+
     try {
+      setLoading(true);
       const token = await AsyncStorage.getItem("access_token");
 
       const formData = new FormData();
@@ -239,16 +74,13 @@ export default function CreateRecipeScreen({ navigation }) {
       formData.append("name", name);
       formData.append("ingredients", JSON.stringify(ingredients));
       formData.append("instructions", JSON.stringify(instructions));
-
-      const imageFile = {
+      formData.append("image", {
         uri: imgUrl,
         name: "photo.jpg",
         type: "image/jpeg",
-      };
+      });
 
-      formData.append("image", imageFile);
-
-      instructionCards.forEach((instruction, index) => {
+      instructions.forEach((instruction, index) => {
         if (instruction.imgUrl) {
           const instructionImageFile = {
             uri: instruction.imgUrl,
@@ -274,7 +106,16 @@ export default function CreateRecipeScreen({ navigation }) {
 
       if (response.ok) {
         Alert.alert("Success", "Recipe submitted successfully!", [
-          { text: "OK", onPress: () => navigation.navigate("RecipeCatalog") },
+          {
+            text: "OK",
+            onPress: () => {
+              setName("");
+              setImgUrl("");
+              setIngredients([""]);
+              setInstructions([{ description: "", imgUrl: "" }]);
+              navigation.navigate("RecipeCatalog");
+            },
+          },
         ]);
       } else {
         const errorData = await response.json();
@@ -285,183 +126,184 @@ export default function CreateRecipeScreen({ navigation }) {
       console.error(error.message);
 
       Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
-  return (
-    <View style={styles.container}>
-      {currentCard === 0 && (
-        <Animated.View
-          style={[
-            styles.card,
-            styles.nameCard,
-            { transform: [{ translateX: firstCardAnimation }] },
-          ]}
-        >
-          <TextInput
-            style={styles.input}
-            placeholder="Enter name"
-            value={name}
-            onChangeText={setName}
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleFirstCardSubmit}
-          >
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+  function handleAddIngredient() {
+    setIngredients([...ingredients, ""]);
+  }
 
-      {currentCard === 1 && (
-        <Animated.View
-          style={[
-            styles.card,
-            styles.imgUrlCard,
-            { transform: [{ translateX: secondCardAnimation }] },
-          ]}
-        >
+  function handleRemoveIngredient(index) {
+    setIngredients(ingredients.filter((_, i) => i !== index));
+  }
+
+  function handleAddInstruction() {
+    setInstructions([...instructions, { description: "", imgUrl: "" }]);
+  }
+
+  function handleRemoveInstruction(index) {
+    setInstructions(instructions.filter((_, i) => i !== index));
+  }
+
+  function handleRemoveImage(setImage) {
+    setImage("");
+  }
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter name"
+          value={name}
+          onChangeText={setName}
+        />
+        {imgUrl ? (
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: imgUrl }} style={styles.imagePreview} />
+            <TouchableOpacity
+              style={styles.removeImageButton}
+              onPress={() => handleRemoveImage(setImgUrl)}
+            >
+              <Ionicons name="close-circle" size={24} color="red" />
+            </TouchableOpacity>
+          </View>
+        ) : null}
+        <View style={styles.buttonRow}>
           <TouchableOpacity
-            style={styles.button}
-            onPress={() => pickImage("camera")}
+            style={[styles.imageButton, imgUrl && styles.disabledButton]}
+            onPress={() => pickImage(setImgUrl)}
+            disabled={!!imgUrl}
+          >
+            <Text style={styles.buttonText}>Upload Recipe Image</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.imageButton, imgUrl && styles.disabledButton]}
+            onPress={() => takePhoto(setImgUrl)}
+            disabled={!!imgUrl}
           >
             <Text style={styles.buttonText}>Take Photo</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => pickImage("gallery")}
-          >
-            <Text style={styles.buttonText}>Upload Photo</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+        </View>
 
-      {currentCard === 2 && (
-        <Animated.View
-          style={[
-            styles.card,
-            styles.ingredientsCard,
-            { transform: [{ translateX: thirdCardAnimation }] },
-          ]}
-        >
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollViewContent}
-            ref={scrollViewRef}
-          >
-            {ingredientCards.map((card, index) => (
-              <View key={card.id} style={styles.ingredientCard}>
-                <TextInput
-                  style={styles.ingredientInput}
-                  placeholder={`Enter ingredient ${index + 1}`}
-                  value={card.value}
-                  onChangeText={(value) =>
-                    handleIngredientChange(card.id, value)
-                  }
+        <Text style={styles.sectionTitle}>Ingredients</Text>
+        {ingredients.map((ingredient, index) => (
+          <View key={index} style={styles.row}>
+            <TextInput
+              style={styles.input}
+              placeholder={`Ingredient ${index + 1}`}
+              value={ingredient}
+              onChangeText={(text) => {
+                const newIngredients = [...ingredients];
+                newIngredients[index] = text;
+                setIngredients(newIngredients);
+              }}
+            />
+            {index > 0 && (
+              <TouchableOpacity onPress={() => handleRemoveIngredient(index)}>
+                <Ionicons name="close-circle" size={24} color="red" />
+              </TouchableOpacity>
+            )}
+          </View>
+        ))}
+        <TouchableOpacity style={styles.button} onPress={handleAddIngredient}>
+          <Text style={styles.buttonText}>Add Ingredient</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.sectionTitle}>Instructions</Text>
+        {instructions.map((instruction, index) => (
+          <View key={index} style={styles.instructionCard}>
+            {instruction.imgUrl ? (
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: instruction.imgUrl }}
+                  style={styles.imagePreview}
                 />
-                {index > 0 && (
-                  <TouchableOpacity
-                    style={styles.removeButton}
-                    onPress={() => handleRemoveIngredient(card.id)}
-                  >
-                    <Ionicons name="close-circle" size={24} color="red" />
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity
+                  style={styles.removeImageButton}
+                  onPress={() => {
+                    const newInstructions = [...instructions];
+                    newInstructions[index].imgUrl = "";
+                    setInstructions(newInstructions);
+                  }}
+                >
+                  <Ionicons name="close-circle" size={24} color="red" />
+                </TouchableOpacity>
               </View>
-            ))}
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={handleAddMoreIngredients}
-            >
-              <Text style={styles.buttonText}>Add More Ingredients</Text>
-            </TouchableOpacity>
-          </ScrollView>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleIngredientsSubmit}
-          >
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+            ) : null}
+            <TextInput
+              style={styles.input}
+              placeholder={`Instruction ${index + 1}`}
+              value={instruction.description}
+              onChangeText={(text) => {
+                const newInstructions = [...instructions];
+                newInstructions[index].description = text;
+                setInstructions(newInstructions);
+              }}
+            />
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={[
+                  styles.imageButton,
+                  instruction.imgUrl && styles.disabledButton,
+                ]}
+                onPress={() =>
+                  pickImage((uri) => {
+                    const newInstructions = [...instructions];
+                    newInstructions[index].imgUrl = uri;
+                    setInstructions(newInstructions);
+                  })
+                }
+                disabled={!!instruction.imgUrl}
+              >
+                <Text style={styles.buttonText}>Upload Instruction Image</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.imageButton,
+                  instruction.imgUrl && styles.disabledButton,
+                ]}
+                onPress={() =>
+                  takePhoto((uri) => {
+                    const newInstructions = [...instructions];
+                    newInstructions[index].imgUrl = uri;
+                    setInstructions(newInstructions);
+                  })
+                }
+                disabled={!!instruction.imgUrl}
+              >
+                <Text style={styles.buttonText}>Take Photo</Text>
+              </TouchableOpacity>
+            </View>
+            {index > 0 && (
+              <TouchableOpacity onPress={() => handleRemoveInstruction(index)}>
+                <Ionicons name="close-circle" size={24} color="red" />
+              </TouchableOpacity>
+            )}
+          </View>
+        ))}
+        <TouchableOpacity style={styles.button} onPress={handleAddInstruction}>
+          <Text style={styles.buttonText}>Add Instruction</Text>
+        </TouchableOpacity>
 
-      {currentCard === 3 && (
-        <Animated.View
-          style={[
-            styles.card,
-            styles.instructionsCard,
-            { transform: [{ translateX: fourthCardAnimation }] },
-          ]}
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={handleSubmitRecipe}
         >
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollViewContent}
-            ref={scrollViewRefInstructions}
-          >
-            {instructionCards.map((card, index) => (
-              <View key={index} style={styles.instructionCard}>
-                <TextInput
-                  style={styles.input}
-                  placeholder={`Enter description for step ${index + 1}`}
-                  value={card.description}
-                  onChangeText={(value) =>
-                    handleInstructionChange(index, "description", value)
-                  }
-                />
-                <View style={styles.imgButtonsContainer}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => pickImage("camera", index)}
-                  >
-                    <Text style={styles.buttonText}>Take Photo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => pickImage("gallery", index)}
-                  >
-                    <Text style={styles.buttonText}>Upload Photo</Text>
-                  </TouchableOpacity>
-                </View>
-                {index > 0 && (
-                  <TouchableOpacity
-                    style={styles.removeButton}
-                    onPress={() => handleRemoveInstruction(index)}
-                  >
-                    <Ionicons name="close-circle" size={24} color="red" />
-                  </TouchableOpacity>
-                )}
-              </View>
-            ))}
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={handleAddMoreInstructions}
-            >
-              <Text style={styles.buttonText}>Add More Instructions</Text>
-            </TouchableOpacity>
-          </ScrollView>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleInstructionsSubmit}
-          >
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </Animated.View>
+          <Text style={styles.buttonText}>Submit Recipe</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#FF7F50" />
+        </View>
       )}
-
-      {currentCard === 4 && (
-        <Animated.View
-          style={[
-            styles.card,
-            styles.submitCard,
-            { transform: [{ translateX: fifthCardAnimation }] },
-          ]}
-        >
-          <TouchableOpacity style={styles.button} onPress={handleSubmitRecipe}>
-            <Text style={styles.buttonText}>Submit Recipe</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -469,43 +311,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  card: {
-    width: "80%",
-    padding: 20,
-    marginVertical: 10,
-    backgroundColor: "#f8f8f8",
-    borderRadius: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    position: "absolute",
-  },
-  nameCard: {
-    height: "auto",
-  },
-  imgUrlCard: {
-    height: "auto",
-  },
-  ingredientsCard: {
-    height: "50%",
-  },
-  instructionsCard: {
-    height: "50%",
-  },
-  submitCard: {
-    height: "auto",
-  },
-  scrollView: {
-    width: "100%",
   },
   scrollViewContent: {
+    padding: 20,
     alignItems: "center",
   },
   input: {
@@ -517,14 +325,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
-  ingredientInput: {
-    flex: 1,
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-  },
   button: {
     width: "100%",
     height: 40,
@@ -532,38 +332,74 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
+    marginVertical: 5,
   },
-  addButton: {
+  submitButton: {
     width: "100%",
     height: 40,
     backgroundColor: "#FF7F50",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
-    marginBottom: 20,
+    marginVertical: 10,
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
   },
-  ingredientCard: {
-    width: "100%",
+  imageButton: {
+    width: "48%",
+    height: 40,
+    backgroundColor: "#FF7F50",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  imagePreview: {
+    width: 200,
+    height: 200,
+    marginBottom: 10,
+  },
+  row: {
     flexDirection: "row",
     alignItems: "center",
+    width: "100%",
+    marginBottom: 10,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
     marginBottom: 10,
   },
   instructionCard: {
     width: "100%",
-    marginBottom: 10,
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: "#f8f8f8",
+    borderRadius: 10,
   },
-  imgButtonsContainer: {
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 10,
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  removeButton: {
-    marginLeft: 10,
+  imageContainer: {
+    position: "relative",
+    alignItems: "center",
+  },
+  removeImageButton: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+  },
+  disabledButton: {
+    backgroundColor: "#ccc",
   },
 });
