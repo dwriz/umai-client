@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 import RecipeCatalogCard from "../../components/RecipeCatalogCard";
@@ -10,6 +11,12 @@ export default function RecipeCatalogScreen({ navigation }) {
   useEffect(() => {
     fetchRecipes();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRecipes();
+    }, [])
+  );
 
   async function fetchRecipes() {
     try {
