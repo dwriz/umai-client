@@ -238,7 +238,7 @@ export default function TutorialScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#B0C654",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     width: "80%",
     padding: 20,
     marginVertical: 10,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#F9EFAE",
     borderRadius: 10,
     alignItems: "center",
     shadowColor: "#000",
@@ -277,14 +277,15 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     height: 40,
-    backgroundColor: "#FF7F50",
-    borderRadius: 5,
+    backgroundColor: "#C07F24",
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 5,
+    marginBottom: 5
   },
   buttonText: {
-    color: "#fff",
+    color: "#FFEDD3",
     fontSize: 16,
   },
   modalContainer: {
@@ -296,7 +297,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: "80%",
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#F9EFAE",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
@@ -304,19 +305,20 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     marginBottom: 20,
+    color: "#536E2C",
     textAlign: "center",
   },
   modalButton: {
     width: "100%",
     height: 40,
-    backgroundColor: "#FF7F50",
-    borderRadius: 5,
+    backgroundColor: "#C07F24",
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 5,
   },
   modalButtonText: {
-    color: "#fff",
+    color: "#FFFBDE",
     fontSize: 16,
   },
   loadingOverlay: {

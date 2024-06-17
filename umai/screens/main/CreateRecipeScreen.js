@@ -164,11 +164,6 @@ export default function CreateRecipeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <View style={styles.headerContainer}>
             <View style={styles.umaiHeaderContainer}>
               <Image
@@ -189,6 +184,11 @@ export default function CreateRecipeScreen({ navigation }) {
               </Button>
             </View>
           </View>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <Text style={styles.sectionTitle}>Recipe Name</Text>
           <TextInput
             style={styles.input1}
@@ -290,40 +290,42 @@ export default function CreateRecipeScreen({ navigation }) {
                 }}
               />
               <View style={styles.buttonRow}>
-                <TouchableOpacity
-                  style={[
-                    styles.imageButton,
-                    instruction.imgUrl && styles.disabledButton,
-                  ]}
-                  onPress={() =>
-                    pickImage((uri) => {
-                      const newInstructions = [...instructions];
-                      newInstructions[index].imgUrl = uri;
-                      setInstructions(newInstructions);
-                    })
-                  }
-                  disabled={!!instruction.imgUrl}
-                >
-                  <Text style={styles.buttonText}>
-                    Upload Instruction Image
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.imageButton,
-                    instruction.imgUrl && styles.disabledButton,
-                  ]}
-                  onPress={() =>
-                    takePhoto((uri) => {
-                      const newInstructions = [...instructions];
-                      newInstructions[index].imgUrl = uri;
-                      setInstructions(newInstructions);
-                    })
-                  }
-                  disabled={!!instruction.imgUrl}
-                >
-                  <Text style={styles.buttonText}>Take Photo</Text>
-                </TouchableOpacity>
+              <TouchableOpacity>
+        <Button
+          icon="upload"
+          mode="contained"
+          textColor="#FFEDD3"
+          style={[styles.imageButton3, instruction.imgUrl && styles.disabledButton]}
+          onPress={() =>
+            pickImage((uri) => {
+              const newInstructions = [...instructions];
+              newInstructions[index].imgUrl = uri;
+              setInstructions(newInstructions);
+            })
+          }
+          disabled={!!instruction.imgUrl}
+        >
+          <Text style={styles.buttonText}>Upload</Text>
+        </Button>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Button
+          icon="camera"
+          mode="contained"
+          textColor="#FFEDD3"
+          style={[styles.imageButton4, instruction.imgUrl && styles.disabledButton]}
+          onPress={() =>
+            pickImage((uri) => {
+              const newInstructions = [...instructions];
+              newInstructions[index].imgUrl = uri;
+              setInstructions(newInstructions);
+            })
+          }
+          disabled={!!instruction.imgUrl}
+        >
+          <Text style={styles.buttonText}>Photo</Text>
+        </Button>
+      </TouchableOpacity>
               </View>
               {index > 0 && (
                 <TouchableOpacity
@@ -404,22 +406,22 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    width: "100%",
+    width: 320,
     height: 40,
     backgroundColor: "#c07f24",
-    borderRadius: 5,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 5,
   },
   submitButton: {
-    width: "100%",
+    width: 320,
     height: 40,
     backgroundColor: "#536E2C",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 10,
+    marginVertical: 30,
   },
   buttonText: {
     color: "#fff",
@@ -442,6 +444,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 10,
     marginLeft: 10,
+  },
+  imageButton3: {
+    width: 150,
+    backgroundColor: "#c07f24",
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+  imageButton4: {
+    width: 150,
+    backgroundColor: "#c07f24",
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10
   },
   imagePreview: {
     width: 200,
@@ -469,7 +490,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
     marginVertical: 5,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#f3e9a9",
     borderRadius: 10,
   },
   loadingOverlay: {
@@ -491,7 +512,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
   },
   headerContainer: {
-    flex: 1,
+    flex: 1/10,
     marginTop: 0,
     flexDirection: "row",
     borderBottomWidth: 1,
