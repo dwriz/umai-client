@@ -12,6 +12,7 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
@@ -35,6 +36,15 @@ export default function CreateRecipeScreen({ navigation }) {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      setIsLoggedIn(false);
+    } catch (error) {
+      Alert.alert("Error", error.message);
     }
   }
 
@@ -156,6 +166,28 @@ export default function CreateRecipeScreen({ navigation }) {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+
+      <View style={styles.headerContainer}>
+        <View style={styles.umaiHeaderContainer}>
+          <Image
+            style={styles.umaiImage}
+            source={require("../../assets/umai_text.png")}
+          ></Image>
+        </View>
+        <View style={styles.logoutContainer}>
+          <Button
+            icon="logout"
+            mode="contained"
+            buttonColor="#c07f24"
+            textColor="#FFEDD3"
+            onPress={handleLogout}
+            style={styles.logoutButton}
+          >
+            <Text style={styles.buttonText}>Logout</Text>
+            
+            </Button>
+        </View>
+      </View>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <TextInput
           style={styles.input}
@@ -310,7 +342,7 @@ export default function CreateRecipeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f3e9a9",
   },
   scrollViewContent: {
     padding: 20,
@@ -328,7 +360,7 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     height: 40,
-    backgroundColor: "#FF7F50",
+    backgroundColor: "#c07f24",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -337,7 +369,7 @@ const styles = StyleSheet.create({
   submitButton: {
     width: "100%",
     height: 40,
-    backgroundColor: "#FF7F50",
+    backgroundColor: "#536E2C",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -350,7 +382,7 @@ const styles = StyleSheet.create({
   imageButton: {
     width: "48%",
     height: 40,
-    backgroundColor: "#FF7F50",
+    backgroundColor: "#c07f24",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -401,5 +433,36 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: "#ccc",
+  },
+  headerContainer: {
+    flex: 7/5,
+    marginTop: 0,
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    backgroundColor: "#D4D768",
+    borderColor: "#B7D88C"
+  },
+  umaiHeaderContainer: {
+    flex: 1,
+  },
+  umaiImage:{
+    width: 120,
+    height: 30,
+    marginTop: 20,
+    marginBottom: 10,
+    paddingRight: 10
+  },
+  logoutContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginLeft: 60,
+    marginBottom: 12.5
+  },
+  buttonText: {
+    color: "#FFEDD3",
+    fontSize: 16,
+    fontWeight: "bold"
   },
 });

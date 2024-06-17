@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Alert, Button } from "react-native";
+import { Alert, StyleSheet, Image  } from "react-native";
+import { Button } from "react-native-paper";
 import { useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from "../context/AuthContext.js";
@@ -28,12 +29,10 @@ export default function BottomTabNavigator() {
     <Tab.Navigator
       initialRouteName="RecipeCatalog"
       screenOptions={({ route }) => ({
-        headerShown: true,
-        headerRight: () => (
-          <Button title="Logout" onPress={handleLogout} color="#FF0000" />
-        ),
-        tabBarActiveTintColor: "#FF7F50",
-        tabBarInactiveTintColor: "#A9A9A9",
+        tabBarStyle: {backgroundColor: "#536E2C"},
+        headerShown: false,
+        tabBarActiveTintColor: "#C7EA99",
+        tabBarInactiveTintColor: "#6C8D3B",
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
@@ -59,11 +58,47 @@ export default function BottomTabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="RecipeStack" component={RecipeStack} />
-      <Tab.Screen name="CreateRecipeScreen" component={CreateRecipeScreen} />
-      <Tab.Screen name="FeedScreen" component={FeedScreen} />
-      <Tab.Screen name="RankScreen" component={RankScreen} />
-      <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Tab.Screen 
+      name="RecipeStack" 
+      component={RecipeStack}
+      options={{
+        tabBarLabel: "Recipe"
+      }} 
+      />
+      <Tab.Screen 
+      name="CreateRecipeScreen" 
+      component={CreateRecipeScreen} 
+      options={{
+        tabBarLabel: "Create"
+      }} 
+      />
+      <Tab.Screen 
+      name="FeedScreen" 
+      component={FeedScreen}
+      options={{
+        tabBarLabel: "Feed"
+      }}  
+      />
+      <Tab.Screen 
+      name="RankScreen" 
+      component={RankScreen} 
+      options={{
+        tabBarLabel: "Rank"
+      }} 
+      />
+      <Tab.Screen 
+      name="ProfileScreen" 
+      component={ProfileScreen} 
+      options={{
+        tabBarLabel: "Profile"
+      }} 
+      />
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+logoutButton: {
+backgroundColor: "#c07f24"
+}
+})
