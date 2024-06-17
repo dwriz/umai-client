@@ -1,279 +1,219 @@
+import React, { useState, useEffect, useCallback } from "react";
 import {
-  StatusBar,
-  StyleSheet,
-  Text,
   View,
+  Text,
   Image,
-  ImageBackground,
+  TouchableOpacity,
+  StyleSheet,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import ButtonDonate from "../../components/ButtonDonate";
-import ButtonPlaceHolder from "../../components/ButtonPlaceholder";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Profile({ navigation }) {
+export default function ProfileScreen() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState("recipes"); // 'recipes' or 'cooked'
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserProfile();
+    }, [])
+  );
+
+  async function fetchUserProfile() {
+    try {
+      const token = await AsyncStorage.getItem("access_token");
+      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/self`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setUser(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#FF7F50" />
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      {/* container untuk profile picture dan nama */}
-      <View style={styles.container1}>
-        <ImageBackground
-          style={styles.imageContainer1}
-          source={{
-            uri: "https://cdn1-production-images-kly.akamaized.net/uBuE5OD3B9pUTVNJd81cB819z7Y=/0x194:5616x3359/800x450/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/3048436/original/030475400_1581499756-shutterstock_413580649.jpg",
-          }}
-          imageStyle={{ opacity: 0.15 }}
-        >
-          <Image
-            style={styles.profilepicture}
-            source={{
-              uri: "https://w7.pngwing.com/pngs/638/424/png-transparent-nichijou-anime-fan-art-nichijou-child-face-hand-thumbnail.png",
-            }}
-          />
-          <View style={styles.subContainer1}>
-            <Text style={styles.text1SubContainer1}>Nama</Text>
-            <Text style={styles.text2SubContainer1}>Username</Text>
-          </View>
-          <View style={styles.subContainer2}>
-            <ButtonDonate />
-            <ButtonPlaceHolder />
-          </View>
-        </ImageBackground>
-      </View>
-      {/* container untuk card */}
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Image source={{ uri: user.profileImgUrl }} style={styles.profileImage} />
+          <Text style={styles.name}>{user.fullname}</Text>
+          <Text style={styles.username}>@{user.username}</Text>
+        </View>
 
-      <View style={styles.container3}>
-        <ScrollView scrollEnabled style={styles.contentContainerFlatListStyle}>
-          <ImageBackground
-            style={styles.imageContainer3}
-            source={{
-              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-            }}
-            imageStyle={{ borderRadius: 20 }}
+        <View style={styles.coinContainer}>
+          <FontAwesome5 name="coins" size={24} color="#FFD700" />
+          <Text style={styles.coinText}>100</Text>
+          <TouchableOpacity style={styles.topUpButton}>
+            <Text style={styles.topUpButtonText}>Top Up</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.recipesButton, activeSection === "recipes" ? styles.activeButton : styles.inactiveButton]}
+            onPress={() => setActiveSection("recipes")}
           >
-            <LinearGradient
-              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-            </LinearGradient>
-          </ImageBackground>
-          <ImageBackground
-            style={styles.imageContainer3}
-            source={{
-              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-            }}
-            imageStyle={{ borderRadius: 20 }}
+            <Text style={styles.buttonText}>Recipes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.cookedButton, activeSection === "cooked" ? styles.activeButton : styles.inactiveButton]}
+            onPress={() => setActiveSection("cooked")}
           >
-            <LinearGradient
-              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-            </LinearGradient>
-          </ImageBackground>
-          <ImageBackground
-            style={styles.imageContainer3}
-            source={{
-              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-            }}
-            imageStyle={{ borderRadius: 20 }}
-          >
-            <LinearGradient
-              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-            </LinearGradient>
-          </ImageBackground>
-          <ImageBackground
-            style={styles.imageContainer3}
-            source={{
-              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-            }}
-            imageStyle={{ borderRadius: 20 }}
-          >
-            <LinearGradient
-              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-            </LinearGradient>
-          </ImageBackground>
-          <ImageBackground
-            style={styles.imageContainer3}
-            source={{
-              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-            }}
-            imageStyle={{ borderRadius: 20 }}
-          >
-            <LinearGradient
-              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-            </LinearGradient>
-          </ImageBackground>
-          <ImageBackground
-            style={styles.imageContainer3}
-            source={{
-              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-            }}
-            imageStyle={{ borderRadius: 20 }}
-          >
-            <LinearGradient
-              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-            </LinearGradient>
-          </ImageBackground>
-          <ImageBackground
-            style={styles.imageContainer3}
-            source={{
-              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-            }}
-            imageStyle={{ borderRadius: 20 }}
-          >
-            <LinearGradient
-              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-            </LinearGradient>
-          </ImageBackground>
-          <ImageBackground
-            style={styles.imageContainer3}
-            source={{
-              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-            }}
-            imageStyle={{ borderRadius: 20 }}
-          >
-            <LinearGradient
-              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 0, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
-            </LinearGradient>
-          </ImageBackground>
+            <Text style={styles.buttonText}>Cooked</Text>
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView>
+          <View style={styles.sectionContainer}>
+            {activeSection === "recipes" ? (
+              user.recipes.map((recipe) => (
+                <View key={recipe._id} style={styles.card}>
+                  <Image source={{ uri: recipe.imgUrl }} style={styles.cardImage} />
+                  <Text style={styles.cardTitle}>{recipe.name}</Text>
+                </View>
+              ))
+            ) : (
+              user.posts.map((post) => (
+                <View key={post._id} style={styles.card}>
+                  <Image source={{ uri: post.imgUrl }} style={styles.cardImage} />
+                  <Text style={styles.cardTitle}>{post.recipeName}</Text>
+                </View>
+              ))
+            )}
+          </View>
         </ScrollView>
-      </View>
-    </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fff",
   },
-  container1: {
-    flex: 6,
-    flexDirection: "col",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#d4d768",
-  },
-  imageContainer1: {
-    resizeMode: "cover",
-    height: 230,
-    width: 400,
-  },
-  subContainer1: {
+  loadingContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  text1SubContainer1: {
-    marginTop: 3,
+  header: {
+    alignItems: "center",
+    padding: 20,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
+  },
+  name: {
+    fontSize: 24,
     fontWeight: "bold",
-    fontSize: 20,
   },
-  text2SubContainer1: {
-    marginTop: 3,
-    fontSize: 20,
+  username: {
+    fontSize: 16,
+    color: "gray",
   },
-  text2SubContainer2: {
-    position: "absolute",
-    fontWeight: "bold",
+  email: {
+    fontSize: 16,
+    color: "gray",
   },
-  subContainer2: {
-    flex: 1,
+  coinContainer: {
     flexDirection: "row",
-    marginLeft: 20,
-    marginBottom: 20
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
-  container2: {
-    flex: 2 / 3,
-    backgroundColor: "#f3e9a9",
-  },
-  textContainer2: {
-    flex: 1,
-    marginTop: 12,
-    fontSize: 20,
-    marginLeft: 25,
+  coinText: {
+    fontSize: 35,
     fontWeight: "bold",
-    // justifyContent: "center",
-    // textAlign: "center",
+    marginHorizontal: 10,
   },
-  container3: {
-    flex: 10,
-    flexWrap: "wrap",
+  topUpButton: {
+    padding: 10,
+    backgroundColor: "#0077b5",
+    borderRadius: 10,
+  },
+  topUpButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  buttonContainer: {
     flexDirection: "row",
-    paddingBottom: 15,
-    backgroundColor: "#f3e9a9",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
-  profilepicture: {
-    width: 80,
-    height: 80,
-    marginTop: 12,
-    marginLeft: 160,
-    marginBottom: 2,
+  recipesButton: {
+    flex: 1,
+    padding: 10,
+    borderRadius: 10,
     marginRight: 10,
-    borderRadius: 40,
-    borderWidth: 2,
-    borderColor: "#b0c654",
   },
-  imageContainer3: {
-    width: 320,
-    height: 150,
-    borderRadius: 35,
-    marginTop: 20,
-    marginLeft: 20,
-  },
-  gradient: {
+  cookedButton: {
     flex: 1,
-    justifyContent: "flex-end",
-    borderRadius: 20,
+    padding: 10,
+    borderRadius: 10,
+    marginLeft: 10,
   },
-  textAbsoluteContainer3: {
-    position: "absolute",
-    top: 110,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    fontSize: 15,
-    justifyContent: "center",
+  activeButton: {
+    backgroundColor: "#0077b5",
+  },
+  inactiveButton: {
+    backgroundColor: "#7fbbda",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
     textAlign: "center",
-    fontSize: 20,
-    color: "white",
   },
-  contentContainerFlatListStyle: {
-    height: "100%",
+  sectionContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  card: {
+    marginBottom: 15,
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    overflow: "hidden",
+  },
+  cardImage: {
+    width: "100%",
+    height: 200,
+  },
+  cardTitle: {
+    padding: 10,
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
