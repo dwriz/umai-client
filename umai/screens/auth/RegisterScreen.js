@@ -13,6 +13,7 @@ import {
   Modal,
   ActivityIndicator,
 } from "react-native";
+import { Button, Colors } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
 export default function RegisterScreen({ navigation }) {
@@ -100,30 +101,50 @@ export default function RegisterScreen({ navigation }) {
         {photo && (
           <View style={styles.imageContainer}>
             <Image source={{ uri: photo }} style={styles.image} />
-            <TouchableOpacity onPress={() => setPhoto(null)} style={styles.deleteButton}>
+            <TouchableOpacity
+              onPress={() => setPhoto(null)}
+              style={styles.deleteButton}
+            >
               <Text style={styles.deleteButtonText}>X</Text>
             </TouchableOpacity>
           </View>
         )}
         <View style={styles.photoButtonsContainer}>
-          <TouchableOpacity
-            style={[styles.photoButton, (photo || loading) && styles.disabledButton]}
-            onPress={takePhoto}
-            disabled={photo !== null || loading}
-          >
-            <Text style={styles.buttonText}>Take Photo</Text>
+          <TouchableOpacity>
+            <Button
+              icon="camera"
+              mode="contained"
+              textColor="#FFEDD3"
+              style={[
+                styles.photoButton1,
+                (photo || loading) && styles.disabledButton,
+              ]}
+              onPress={takePhoto}
+              disabled={photo !== null || loading}
+            >
+              <Text style={styles.buttonText}>Take Photo</Text>
+            </Button>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.photoButton, (photo || loading) && styles.disabledButton]}
-            onPress={pickImage}
-            disabled={photo !== null || loading}
-          >
-            <Text style={styles.buttonText}>Upload Photo</Text>
+          <TouchableOpacity>
+            <Button
+              icon="upload"
+              mode="contained"
+              textColor="#FFEDD3"
+              style={[
+                styles.photoButton2,
+                (photo || loading) && styles.disabledButton,
+              ]}
+              onPress={pickImage}
+              disabled={photo !== null || loading}
+            >
+              <Text style={styles.buttonText}>Upload Photo</Text>
+            </Button>
           </TouchableOpacity>
         </View>
         <TextInput
           style={styles.input}
           placeholder="Full Name"
+          placeholderTextColor={"#536e2c"}
           autoCapitalize="words"
           value={fullname}
           onChangeText={setFullname}
@@ -132,6 +153,7 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Nickname"
+          placeholderTextColor={"#536e2c"}
           autoCapitalize="words"
           value={username}
           onChangeText={setUsername}
@@ -140,6 +162,7 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Email"
+          placeholderTextColor={"#536e2c"}
           keyboardType="email-address"
           autoCapitalize="none"
           value={email}
@@ -149,6 +172,7 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Password"
+          placeholderTextColor={"#536e2c"}
           secureTextEntry
           autoCapitalize="none"
           value={password}
@@ -220,15 +244,24 @@ const styles = StyleSheet.create({
   },
   photoButtonsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     width: "100%",
     marginBottom: 10,
   },
-  photoButton: {
+  photoButton1: {
     flex: 1,
     height: 40,
-    backgroundColor: "#FF7F50",
-    borderRadius: 5,
+    backgroundColor: "#c07f24",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 5,
+  },
+  photoButton2: {
+    flex: 1,
+    height: 40,
+    backgroundColor: "#c07f24",
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 5,
@@ -239,32 +272,34 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: 40,
-    backgroundColor: "#fff",
-    borderColor: "#ccc",
+    backgroundColor: "#FFFBDE",
+    borderColor: "#759a3f",
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     paddingHorizontal: 10,
-    marginBottom: 10,
+    marginVertical: 7,
   },
   submitButton: {
     width: "100%",
     height: 40,
-    backgroundColor: "#FF7F50",
-    borderRadius: 5,
+    backgroundColor: "#c07f24",
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
   },
   buttonText: {
-    color: "#fff",
+    color: "#FFEDD3",
     fontSize: 16,
   },
   loginButton: {
     marginTop: 10,
   },
   loginButtonText: {
-    color: "#FF7F50",
+    color: "#536e2c",
     fontSize: 16,
+    marginTop: 5,
+    textDecorationLine: "underline",
   },
   loadingContainer: {
     flex: 1,
