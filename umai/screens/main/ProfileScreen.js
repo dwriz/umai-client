@@ -8,8 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import ButtonDonate from "../components/ButtonDonate";
-import ButtonPlaceHolder from "../components/ButtonPlaceholder";
+import ButtonDonate from "../../components/ButtonDonate";
+import ButtonPlaceHolder from "../../components/ButtonPlaceholder";
 
 export default function Profile({ navigation }) {
   return (
