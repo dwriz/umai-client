@@ -5,10 +5,11 @@ import {
   View,
   Image,
   ImageBackground,
-  Pressable,
+  ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
+import ButtonDonate from "../components/ButtonDonate";
+import ButtonPlaceHolder from "../components/ButtonPlaceholder";
 
 export default function Profile({ navigation }) {
   return (
@@ -16,31 +17,33 @@ export default function Profile({ navigation }) {
       <StatusBar style="auto" />
       {/* container untuk profile picture dan nama */}
       <View style={styles.container1}>
-        <Image
-          style={styles.profilepicture}
+        <ImageBackground
+          style={styles.imageContainer1}
           source={{
-            uri: "https://w7.pngwing.com/pngs/638/424/png-transparent-nichijou-anime-fan-art-nichijou-child-face-hand-thumbnail.png",
+            uri: "https://cdn1-production-images-kly.akamaized.net/uBuE5OD3B9pUTVNJd81cB819z7Y=/0x194:5616x3359/800x450/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/3048436/original/030475400_1581499756-shutterstock_413580649.jpg",
           }}
-        />
-        <View style={styles.subContainer1}>
-          <Text style={styles.text1SubContainer1}>Nama</Text>
-          <Text style={styles.text2SubContainer2}>Username</Text>
-        </View>
-        <View style={styles.subContainer2}>
-          <Ionicons name="settings" size={24} color="black" />
-        </View>
-      </View>
-      {/* container untuk text Recipe */}
-      <View style={styles.container2}>
-        <Text style={styles.textContainer2}>Recipe</Text>
+          imageStyle={{ opacity: 0.15 }}
+        >
+          <Image
+            style={styles.profilepicture}
+            source={{
+              uri: "https://w7.pngwing.com/pngs/638/424/png-transparent-nichijou-anime-fan-art-nichijou-child-face-hand-thumbnail.png",
+            }}
+          />
+          <View style={styles.subContainer1}>
+            <Text style={styles.text1SubContainer1}>Nama</Text>
+            <Text style={styles.text2SubContainer1}>Username</Text>
+          </View>
+          <View style={styles.subContainer2}>
+            <ButtonDonate />
+            <ButtonPlaceHolder />
+          </View>
+        </ImageBackground>
       </View>
       {/* container untuk card */}
+
       <View style={styles.container3}>
-        <Pressable
-          onPress={() => {
-            navigation.navigate("ProfileRecipeScreen");
-          }}
-        >
+        <ScrollView scrollEnabled style={styles.contentContainerFlatListStyle}>
           <ImageBackground
             style={styles.imageContainer3}
             source={{
@@ -57,26 +60,119 @@ export default function Profile({ navigation }) {
               <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
             </LinearGradient>
           </ImageBackground>
-        </Pressable>
-
-        <Image
-          style={styles.imageContainer3}
-          source={{
-            uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-          }}
-        />
-        <Image
-          style={styles.imageContainer3}
-          source={{
-            uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-          }}
-        />
-        <Image
-          style={styles.imageContainer3}
-          source={{
-            uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
-          }}
-        />
+          <ImageBackground
+            style={styles.imageContainer3}
+            source={{
+              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+            }}
+            imageStyle={{ borderRadius: 20 }}
+          >
+            <LinearGradient
+              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
+            </LinearGradient>
+          </ImageBackground>
+          <ImageBackground
+            style={styles.imageContainer3}
+            source={{
+              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+            }}
+            imageStyle={{ borderRadius: 20 }}
+          >
+            <LinearGradient
+              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
+            </LinearGradient>
+          </ImageBackground>
+          <ImageBackground
+            style={styles.imageContainer3}
+            source={{
+              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+            }}
+            imageStyle={{ borderRadius: 20 }}
+          >
+            <LinearGradient
+              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
+            </LinearGradient>
+          </ImageBackground>
+          <ImageBackground
+            style={styles.imageContainer3}
+            source={{
+              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+            }}
+            imageStyle={{ borderRadius: 20 }}
+          >
+            <LinearGradient
+              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
+            </LinearGradient>
+          </ImageBackground>
+          <ImageBackground
+            style={styles.imageContainer3}
+            source={{
+              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+            }}
+            imageStyle={{ borderRadius: 20 }}
+          >
+            <LinearGradient
+              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
+            </LinearGradient>
+          </ImageBackground>
+          <ImageBackground
+            style={styles.imageContainer3}
+            source={{
+              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+            }}
+            imageStyle={{ borderRadius: 20 }}
+          >
+            <LinearGradient
+              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
+            </LinearGradient>
+          </ImageBackground>
+          <ImageBackground
+            style={styles.imageContainer3}
+            source={{
+              uri: "https://akcdn.detik.net.id/visual/2021/12/27/siomay-1_43.jpeg?w=720&q=90",
+            }}
+            imageStyle={{ borderRadius: 20 }}
+          >
+            <LinearGradient
+              colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0)"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0, y: 0 }}
+              style={styles.gradient}
+            >
+              <Text style={styles.textAbsoluteContainer3}>Siomay Ayam</Text>
+            </LinearGradient>
+          </ImageBackground>
+        </ScrollView>
       </View>
     </View>
   );
@@ -88,27 +184,39 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   container1: {
-    flex: 19 / 20,
-    flexDirection: "row",
+    flex: 6,
+    flexDirection: "col",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#d4d768",
+  },
+  imageContainer1: {
+    resizeMode: "cover",
+    height: 230,
+    width: 400,
   },
   subContainer1: {
-    flex: 1,
-    backgroundColor: "#d4d768",
+    justifyContent: "center",
+    alignItems: "center",
   },
   text1SubContainer1: {
-    marginTop: 6,
+    marginTop: 3,
     fontWeight: "bold",
+    fontSize: 20,
+  },
+  text2SubContainer1: {
+    marginTop: 3,
+    fontSize: 20,
   },
   text2SubContainer2: {
+    position: "absolute",
     fontWeight: "bold",
   },
   subContainer2: {
     flex: 1,
-    backgroundColor: "#d4d768",
-    marginTop: 15,
-    marginRight: 10,
-    alignItems: "flex-end",
+    flexDirection: "row",
+    marginLeft: 20,
+    marginBottom: 20
   },
   container2: {
     flex: 2 / 3,
@@ -127,24 +235,25 @@ const styles = StyleSheet.create({
     flex: 10,
     flexWrap: "wrap",
     flexDirection: "row",
+    paddingBottom: 15,
     backgroundColor: "#f3e9a9",
   },
   profilepicture: {
-    width: 50,
-    height: 50,
-    marginTop: 2,
-    marginLeft: 10,
+    width: 80,
+    height: 80,
+    marginTop: 12,
+    marginLeft: 160,
     marginBottom: 2,
     marginRight: 10,
-    borderRadius: 35,
+    borderRadius: 40,
     borderWidth: 2,
     borderColor: "#b0c654",
   },
   imageContainer3: {
-    width: 150,
+    width: 320,
     height: 150,
     borderRadius: 35,
-    marginTop: 15,
+    marginTop: 20,
     marginLeft: 20,
   },
   gradient: {
@@ -154,13 +263,17 @@ const styles = StyleSheet.create({
   },
   textAbsoluteContainer3: {
     position: "absolute",
-    top: 120,
-    left: 30,
+    top: 110,
+    left: 0,
     right: 0,
     bottom: 0,
     fontSize: 15,
     justifyContent: "center",
     textAlign: "center",
+    fontSize: 20,
     color: "white",
+  },
+  contentContainerFlatListStyle: {
+    height: "100%",
   },
 });
