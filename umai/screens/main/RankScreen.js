@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,13 +8,16 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
+import { Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function RankScreen() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("finished");
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     fetchRanking();
@@ -40,6 +43,15 @@ export default function RankScreen() {
     } catch (error) {
       console.error("Error fetching ranking:", error);
       setLoading(false);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      setIsLoggedIn(false);
+    } catch (error) {
+      Alert.alert("Error", error.message);
     }
   }
 
@@ -93,7 +105,26 @@ export default function RankScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-
+        <View style={styles.headerContainer}>
+        <View style={styles.umaiHeaderContainer}>
+          <Image
+            style={styles.umaiImage}
+            source={require("../../assets/umai_text.png")}
+          ></Image>
+        </View>
+        <View style={styles.logoutContainer}>
+          <Button
+            icon="logout"
+            mode="contained"
+            buttonColor="#c07f24"
+            textColor="#FFEDD3"
+            onPress={handleLogout}
+            style={styles.logoutButton}
+          >
+            <Text style={styles.buttonText}>Logout</Text>
+          </Button>
+        </View>
+      </View>
     <View style={styles.container}>
       <View style={styles.filterContainer}>
         <TouchableOpacity
@@ -103,7 +134,7 @@ export default function RankScreen() {
           ]}
           onPress={() => setFilter("finished")}
         >
-          <Text style={styles.buttonText}>By Finished Recipes</Text>
+          <Text style={styles.buttonText1}>By Finished Recipes</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -112,7 +143,7 @@ export default function RankScreen() {
           ]}
           onPress={() => setFilter("created")}
         >
-          <Text style={styles.buttonText}>By Created Recipes</Text>
+          <Text style={styles.buttonText1}>By Created Recipes</Text>
         </TouchableOpacity>
       </View>
       <FlatList
@@ -129,7 +160,7 @@ export default function RankScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F9EFAE",
   },
   loadingContainer: {
     flex: 1,
@@ -142,7 +173,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 10,
     padding: 15,
-    backgroundColor: "#fff",
+    backgroundColor: "#F1ECCD",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -163,26 +194,27 @@ const styles = StyleSheet.create({
   fullname: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "#536E2C"
   },
   username: {
     fontSize: 14,
-    color: "#888",
+    color: "#536E2C",
   },
   count: {
     fontSize: 14,
-    color: "#333",
+    color: "#536E2C",
   },
   rankContainer: {
     alignItems: "center",
   },
   rankLabel: {
     fontSize: 14,
-    color: "#888",
+    color: "#536E2C",
   },
   rankNumber: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#FF7F50",
+    color: "#C07F24",
   },
   filterContainer: {
     flexDirection: "row",
@@ -190,21 +222,59 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   filterButton: {
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: "#f0f0f0",
+    padding: 12,
+    borderRadius: 20,
+    backgroundColor: "#C5CAB0",
   },
   activeButton: {
-    backgroundColor: "#FF7F50",
+    backgroundColor: "#6C8E3B",
   },
-  buttonText: {
-    color: "#000",
+  buttonText1: {
+    color: "#F9EFAE",
     fontWeight: "bold",
   },
   listContainer: {
     padding: 20,
   },
+  headerContainer: {
+    flex: 1/10,
+    marginTop: 0,
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    backgroundColor: "#D4D768",
+    borderColor: "#B7D88C",
+  },
+  umaiHeaderContainer: {
+    flex: 1,
+  },
+  umaiImage: {
+    width: 120,
+    height: 30,
+    marginTop: 20,
+    marginBottom: 10,
+    paddingRight: 10,
+  },
+  logoutContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginLeft: 60,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: "#FFEDD3",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   safeArea: {
-    flex: 1
-  }
+    flex: 1,
+    backgroundColor: "#f3e9a9",
+  },
+  listContainer: {
+    justifyContent: "space-between",
+  },
+  logoutButton: {
+    marginBottom: 0
+  },
 });

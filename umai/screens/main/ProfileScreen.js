@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import {
   View,
   Text,
@@ -8,16 +8,19 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function ProfileScreen() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("recipes");
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   const navigation = useNavigation();
 
@@ -26,6 +29,15 @@ export default function ProfileScreen() {
       fetchUserProfile();
     }, [])
   );
+
+  async function handleLogout() {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      setIsLoggedIn(false);
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+  }
 
   async function fetchUserProfile() {
     try {
@@ -56,7 +68,31 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+      
+        <View style={styles.headerContainer}>
+          <View style={styles.umaiHeaderContainer}>
+            <Image
+              style={styles.umaiImage}
+              source={require("../../assets/umai_text.png")}
+            ></Image>
+          </View>
+          <View style={styles.logoutContainer}>
+            <Button
+              icon="logout"
+              mode="contained"
+              buttonColor="#c07f24"
+              textColor="#FFEDD3"
+              onPress={handleLogout}
+              style={styles.logoutButton}
+            >
+              <Text style={styles.buttonText}>Logout</Text>
+            </Button>
+          </View>
+        </View>
+
+        <View style={styles.container}>
+
         <View style={styles.header}>
           <Image
             source={{ uri: user.profileImgUrl }}
@@ -67,7 +103,7 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.coinContainer}>
-          <FontAwesome5 name="coins" size={24} color="#FFD700" />
+          <FontAwesome5 name="coins" size={24} color="#C07F24" />
           <Text style={styles.coinText}>{user.balance}</Text>
           <TouchableOpacity
             style={styles.topUpButton}
@@ -125,6 +161,8 @@ export default function ProfileScreen() {
                 ))}
           </View>
         </ScrollView>
+          
+          </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -133,7 +171,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F9EFAE",
   },
   loadingContainer: {
     flex: 1,
@@ -142,7 +180,8 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    padding: 20,
+    marginTop: 20
+    // padding: 20,
   },
   profileImage: {
     width: 100,
@@ -153,10 +192,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
+    color: "#536E2C"
   },
   username: {
     fontSize: 16,
-    color: "gray",
+    color: "#6C8E3B",
   },
   email: {
     fontSize: 16,
@@ -177,11 +217,11 @@ const styles = StyleSheet.create({
   },
   topUpButton: {
     padding: 10,
-    backgroundColor: "#0077b5",
+    backgroundColor: "#B7D88C",
     borderRadius: 10,
   },
   topUpButtonText: {
-    color: "#fff",
+    color: "#536E2C",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -194,23 +234,23 @@ const styles = StyleSheet.create({
   recipesButton: {
     flex: 1,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 20,
     marginRight: 10,
   },
   cookedButton: {
     flex: 1,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 20,
     marginLeft: 10,
   },
   activeButton: {
-    backgroundColor: "#0077b5",
+    backgroundColor: "#6C8E3B",
   },
   inactiveButton: {
-    backgroundColor: "#7fbbda",
+    backgroundColor: "#C5CAB0",
   },
   buttonText: {
-    color: "#fff",
+    color: "#F9EFAE",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -222,7 +262,7 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: 15,
     borderRadius: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#F1ECCD",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -238,5 +278,42 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     fontWeight: "bold",
+    color: "#536E2C"
+  },
+  headerContainer: {
+    flex: 1 / 10,
+    marginTop: 0,
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    backgroundColor: "#D4D768",
+    borderColor: "#B7D88C",
+  },
+  umaiHeaderContainer: {
+    flex: 1,
+  },
+  umaiImage: {
+    width: 120,
+    height: 30,
+    marginTop: 20,
+    marginBottom: 10,
+    paddingRight: 10,
+  },
+  logoutContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginLeft: 60,
+    marginBottom: 10,
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f3e9a9",
+  },
+  listContainer: {
+    justifyContent: "space-between",
+  },
+  logoutButton: {
+    marginBottom: 0,
   },
 });

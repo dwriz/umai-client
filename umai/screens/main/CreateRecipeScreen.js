@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     marginLeft: 60,
-    marginBottom: 8.5,
+    marginBottom: 10,
   },
   buttonText: {
     color: "#FFEDD3",
