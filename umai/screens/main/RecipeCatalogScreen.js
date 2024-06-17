@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 import RecipeCatalogCard from "../../components/RecipeCatalogCard";
@@ -11,10 +12,15 @@ export default function RecipeCatalogScreen({ navigation }) {
     fetchRecipes();
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchRecipes();
+    }, [])
+  );
+
   async function fetchRecipes() {
     try {
       const token = await AsyncStorage.getItem("access_token");
-
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_BASE_URL}/recipes`,
         {
@@ -23,20 +29,22 @@ export default function RecipeCatalogScreen({ navigation }) {
           },
         }
       );
-
       const data = await response.json();
-
       setRecipes(data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching recipes:", error);
-
       setLoading(false);
     }
   }
 
   function renderRecipe({ item }) {
-    return <RecipeCatalogCard recipe={item} />;
+    return (
+      <RecipeCatalogCard
+        recipe={item}
+        onPress={() => navigation.navigate("Tutorial", { recipe: item })}
+      />
+    );
   }
 
   if (loading) {

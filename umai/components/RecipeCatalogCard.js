@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, ImageBackground, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  View,
+} from "react-native";
 
 export default function RecipeCatalogCard({ recipe, onPress }) {
   return (
@@ -11,8 +17,12 @@ export default function RecipeCatalogCard({ recipe, onPress }) {
       >
         <View style={styles.overlay} />
         <Text style={styles.cardTitle}>{recipe.name}</Text>
-        <Text style={styles.cardText}>Ingredients: {recipe.ingredients.length}</Text>
-        <Text style={styles.cardText}>Instructions: {recipe.instructions.length}</Text>
+        <Text style={styles.cardText}>
+          Ingredients: {recipe.ingredients.length}
+        </Text>
+        <Text style={styles.cardText}>
+          Instructions: {recipe.instructions.length}
+        </Text>
       </ImageBackground>
     </TouchableOpacity>
   );
@@ -24,6 +34,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 10,
     overflow: "hidden",
+    height: 180,
   },
   imageBackground: {
     flex: 1,

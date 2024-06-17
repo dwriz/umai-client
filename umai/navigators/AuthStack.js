@@ -1,5 +1,3 @@
-// navigators/AuthStack.js
-
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
