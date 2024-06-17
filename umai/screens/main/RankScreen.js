@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function RankScreen() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("finished"); // 'finished' or 'created'
+  const [filter, setFilter] = useState("finished");
 
   useEffect(() => {
     fetchRanking();
@@ -23,14 +23,17 @@ export default function RankScreen() {
     try {
       const token = await AsyncStorage.getItem("access_token");
 
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/ranking`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/ranking`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
-      
+
       setUsers(data);
       setLoading(false);
     } catch (error) {
@@ -40,7 +43,8 @@ export default function RankScreen() {
   }
 
   function renderUser({ item, index }) {
-    const count = filter === "finished" ? item.finishedRecipeCount : item.recipes.length;
+    const count =
+      filter === "finished" ? item.finishedRecipeCount : item.recipes.length;
 
     return (
       <View style={styles.userContainer}>
@@ -53,7 +57,9 @@ export default function RankScreen() {
             <Text style={styles.fullname}>{item.fullname}</Text>
             <Text style={styles.username}>@{item.username}</Text>
             <Text style={styles.count}>
-              {filter === "finished" ? "Finished Recipes: " : "Created Recipes: "}
+              {filter === "finished"
+                ? "Finished Recipes: "
+                : "Created Recipes: "}
               {count}
             </Text>
           </View>
@@ -88,13 +94,19 @@ export default function RankScreen() {
     <View style={styles.container}>
       <View style={styles.filterContainer}>
         <TouchableOpacity
-          style={[styles.filterButton, filter === "finished" && styles.activeButton]}
+          style={[
+            styles.filterButton,
+            filter === "finished" && styles.activeButton,
+          ]}
           onPress={() => setFilter("finished")}
         >
           <Text style={styles.buttonText}>By Finished Recipes</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.filterButton, filter === "created" && styles.activeButton]}
+          style={[
+            styles.filterButton,
+            filter === "created" && styles.activeButton,
+          ]}
           onPress={() => setFilter("created")}
         >
           <Text style={styles.buttonText}>By Created Recipes</Text>

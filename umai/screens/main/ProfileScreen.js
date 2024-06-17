@@ -16,7 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function ProfileScreen() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState("recipes"); // 'recipes' or 'cooked'
+  const [activeSection, setActiveSection] = useState("recipes");
 
   useFocusEffect(
     useCallback(() => {
@@ -55,14 +55,17 @@ export default function ProfileScreen() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Image source={{ uri: user.profileImgUrl }} style={styles.profileImage} />
+          <Image
+            source={{ uri: user.profileImgUrl }}
+            style={styles.profileImage}
+          />
           <Text style={styles.name}>{user.fullname}</Text>
           <Text style={styles.username}>@{user.username}</Text>
         </View>
 
         <View style={styles.coinContainer}>
           <FontAwesome5 name="coins" size={24} color="#FFD700" />
-          <Text style={styles.coinText}>100</Text>
+          <Text style={styles.coinText}>{user.balance}</Text>
           <TouchableOpacity style={styles.topUpButton}>
             <Text style={styles.topUpButtonText}>Top Up</Text>
           </TouchableOpacity>
@@ -70,13 +73,23 @@ export default function ProfileScreen() {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.recipesButton, activeSection === "recipes" ? styles.activeButton : styles.inactiveButton]}
+            style={[
+              styles.recipesButton,
+              activeSection === "recipes"
+                ? styles.activeButton
+                : styles.inactiveButton,
+            ]}
             onPress={() => setActiveSection("recipes")}
           >
             <Text style={styles.buttonText}>Recipes</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.cookedButton, activeSection === "cooked" ? styles.activeButton : styles.inactiveButton]}
+            style={[
+              styles.cookedButton,
+              activeSection === "cooked"
+                ? styles.activeButton
+                : styles.inactiveButton,
+            ]}
             onPress={() => setActiveSection("cooked")}
           >
             <Text style={styles.buttonText}>Cooked</Text>
@@ -85,21 +98,25 @@ export default function ProfileScreen() {
 
         <ScrollView>
           <View style={styles.sectionContainer}>
-            {activeSection === "recipes" ? (
-              user.recipes.map((recipe) => (
-                <View key={recipe._id} style={styles.card}>
-                  <Image source={{ uri: recipe.imgUrl }} style={styles.cardImage} />
-                  <Text style={styles.cardTitle}>{recipe.name}</Text>
-                </View>
-              ))
-            ) : (
-              user.posts.map((post) => (
-                <View key={post._id} style={styles.card}>
-                  <Image source={{ uri: post.imgUrl }} style={styles.cardImage} />
-                  <Text style={styles.cardTitle}>{post.recipeName}</Text>
-                </View>
-              ))
-            )}
+            {activeSection === "recipes"
+              ? user.recipes.map((recipe) => (
+                  <View key={recipe._id} style={styles.card}>
+                    <Image
+                      source={{ uri: recipe.imgUrl }}
+                      style={styles.cardImage}
+                    />
+                    <Text style={styles.cardTitle}>{recipe.name}</Text>
+                  </View>
+                ))
+              : user.posts.map((post) => (
+                  <View key={post._id} style={styles.card}>
+                    <Image
+                      source={{ uri: post.imgUrl }}
+                      style={styles.cardImage}
+                    />
+                    <Text style={styles.cardTitle}>{post.recipeName}</Text>
+                  </View>
+                ))}
           </View>
         </ScrollView>
       </SafeAreaView>

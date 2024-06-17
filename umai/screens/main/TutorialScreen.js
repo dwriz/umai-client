@@ -97,7 +97,7 @@ export default function TutorialScreen({ route, navigation }) {
   async function incrementFinishedRecipeCount() {
     try {
       const token = await AsyncStorage.getItem("access_token");
-      
+
       await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/finished-recipe`, {
         method: "POST",
         headers: {
