@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerContainer: {
-    flex: 1/9,
+    flex: 1/10,
     marginTop: 0,
     flexDirection: "row",
     borderBottomWidth: 1,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     marginLeft: 60,
-    marginBottom: 12.5,
+    marginBottom: 10,
   },
   buttonText: {
     color: "#FFEDD3",
