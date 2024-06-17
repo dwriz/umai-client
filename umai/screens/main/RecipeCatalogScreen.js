@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import RecipeCatalogCard from "../../components/RecipeCatalogCard";
 import { AuthContext } from "../../context/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RecipeCatalogScreen({ navigation }) {
   const [recipes, setRecipes] = useState([]);
@@ -76,6 +77,7 @@ export default function RecipeCatalogScreen({ navigation }) {
   }
 
   return (
+    <SafeAreaView style={styles.safeArea}>
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <View style={styles.umaiHeaderContainer}>
@@ -110,6 +112,7 @@ export default function RecipeCatalogScreen({ navigation }) {
         contentContainerStyle={styles.listContainer}
       />
     </View>
+    </SafeAreaView>
   );
 }
 
@@ -166,5 +169,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
     marginLeft: 10
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f3e9a9",
   }
 });
