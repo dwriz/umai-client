@@ -12,11 +12,14 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileScreen() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("recipes");
+
+  const navigation = useNavigation();
 
   useFocusEffect(
     useCallback(() => {
@@ -66,7 +69,10 @@ export default function ProfileScreen() {
         <View style={styles.coinContainer}>
           <FontAwesome5 name="coins" size={24} color="#FFD700" />
           <Text style={styles.coinText}>{user.balance}</Text>
-          <TouchableOpacity style={styles.topUpButton}>
+          <TouchableOpacity
+            style={styles.topUpButton}
+            onPress={() => navigation.navigate("TopUpScreen")}
+          >
             <Text style={styles.topUpButtonText}>Top Up</Text>
           </TouchableOpacity>
         </View>

@@ -1,15 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Alert, StyleSheet, Image  } from "react-native";
-import { Button } from "react-native-paper";
-import { useContext } from "react";
+import { Alert, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.js";
 import CreateRecipeScreen from "../screens/main/CreateRecipeScreen.js";
 import FeedScreen from "../screens/main/FeedScreen.js";
-import ProfileScreen from "../screens/main/ProfileScreen.js";
 import RankScreen from "../screens/main/RankScreen.js";
 import RecipeStack from "./RecipeStack";
+import ProfileStack from "./ProfileStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +28,7 @@ export default function BottomTabNavigator() {
     <Tab.Navigator
       initialRouteName="RecipeCatalog"
       screenOptions={({ route }) => ({
-        tabBarStyle: {backgroundColor: "#536E2C"},
+        tabBarStyle: { backgroundColor: "#536E2C" },
         headerShown: false,
         tabBarActiveTintColor: "#C7EA99",
         tabBarInactiveTintColor: "#6C8D3B",
@@ -46,7 +45,7 @@ export default function BottomTabNavigator() {
             case "FeedScreen":
               iconName = "newspaper";
               break;
-            case "ProfileScreen":
+            case "ProfileStack":
               iconName = "person";
               break;
             case "RankScreen":
@@ -58,47 +57,47 @@ export default function BottomTabNavigator() {
         },
       })}
     >
-      <Tab.Screen 
-      name="RecipeStack" 
-      component={RecipeStack}
-      options={{
-        tabBarLabel: "Recipe"
-      }} 
+      <Tab.Screen
+        name="RecipeStack"
+        component={RecipeStack}
+        options={{
+          tabBarLabel: "Recipe",
+        }}
       />
-      <Tab.Screen 
-      name="CreateRecipeScreen" 
-      component={CreateRecipeScreen} 
-      options={{
-        tabBarLabel: "Create"
-      }} 
+      <Tab.Screen
+        name="CreateRecipeScreen"
+        component={CreateRecipeScreen}
+        options={{
+          tabBarLabel: "Create",
+        }}
       />
-      <Tab.Screen 
-      name="FeedScreen" 
-      component={FeedScreen}
-      options={{
-        tabBarLabel: "Feed"
-      }}  
+      <Tab.Screen
+        name="FeedScreen"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: "Feed",
+        }}
       />
-      <Tab.Screen 
-      name="RankScreen" 
-      component={RankScreen} 
-      options={{
-        tabBarLabel: "Rank"
-      }} 
+      <Tab.Screen
+        name="RankScreen"
+        component={RankScreen}
+        options={{
+          tabBarLabel: "Rank",
+        }}
       />
-      <Tab.Screen 
-      name="ProfileScreen" 
-      component={ProfileScreen} 
-      options={{
-        tabBarLabel: "Profile"
-      }} 
+      <Tab.Screen
+        name="ProfileStack"
+        component={ProfileStack}
+        options={{
+          tabBarLabel: "Profile",
+        }}
       />
     </Tab.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
-logoutButton: {
-backgroundColor: "#c07f24"
-}
-})
+  logoutButton: {
+    backgroundColor: "#c07f24",
+  },
+});
