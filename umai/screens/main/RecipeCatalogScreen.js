@@ -78,7 +78,6 @@ export default function RecipeCatalogScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View style={styles.umaiHeaderContainer}>
             <Image
@@ -99,6 +98,7 @@ export default function RecipeCatalogScreen({ navigation }) {
             </Button>
           </View>
         </View>
+      <View style={styles.container}>
         <View style={styles.textContainer}>
           <Text style={styles.subHeaderText}>Our list of recipe</Text>
         </View>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerContainer: {
-    flex: 2 / 11,
+    flex: 1/9,
     marginTop: 0,
     flexDirection: "row",
     borderBottomWidth: 1,
@@ -158,7 +158,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   textContainer: {
-    marginTop: 17,
+    marginTop: 10,
+    marginBottom: 10
   },
   subHeaderText: {
     fontSize: 25,

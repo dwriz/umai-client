@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RankScreen() {
   const [users, setUsers] = useState([]);
@@ -91,6 +92,8 @@ export default function RankScreen() {
   }
 
   return (
+    <SafeAreaView style={styles.safeArea}>
+
     <View style={styles.container}>
       <View style={styles.filterContainer}>
         <TouchableOpacity
@@ -119,6 +122,7 @@ export default function RankScreen() {
         contentContainerStyle={styles.listContainer}
       />
     </View>
+    </SafeAreaView>
   );
 }
 
@@ -200,4 +204,7 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: 20,
   },
+  safeArea: {
+    flex: 1
+  }
 });
