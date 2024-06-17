@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image
 } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -59,10 +60,14 @@ export default function LoginScreen({ navigation }) {
       keyboardVerticalOffset={90}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Login Screen</Text>
+        <Image 
+        source={require('../../assets/umai_pan.png')}
+        style={styles.umaiLogo}
+        />
         <TextInput
           style={styles.input}
           placeholder="Email"
+          placeholderTextColor={"#536e2c"}
           keyboardType="email-address"
           autoCapitalize="none"
           value={email}
@@ -72,6 +77,7 @@ export default function LoginScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Password"
+          placeholderTextColor={"#536e2c"}
           secureTextEntry
           autoCapitalize="none"
           value={password}
@@ -83,14 +89,14 @@ export default function LoginScreen({ navigation }) {
           onPress={handleLogin}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>Submit</Text>
+          <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.registerButton, loading && styles.disabledButton]}
           onPress={() => navigation.navigate("Register")}
           disabled={loading}
         >
-          <Text style={styles.registerButtonText}>Register</Text>
+          <Text style={styles.registerButtonText}>Don't have account? Sign up here</Text>
         </TouchableOpacity>
         {loading && (
           <Modal transparent={true} animationType="none" visible={loading}>
@@ -107,7 +113,7 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF5B1",
   },
   scrollContainer: {
     flexGrow: 1,
@@ -118,21 +124,23 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
+    color: "#536e2c"
   },
   input: {
     width: "100%",
     height: 40,
-    borderColor: "#ccc",
+    backgroundColor: "#FFFBDE",
+    borderColor: "#759a3f",
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 10,
   },
   submitButton: {
     width: "100%",
     height: 40,
-    backgroundColor: "#FF7F50",
-    borderRadius: 5,
+    backgroundColor: "#c07f24",
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
@@ -141,15 +149,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
   },
   buttonText: {
-    color: "#fff",
+    color: "#FFEDD3",
     fontSize: 16,
+    fontWeight: "bold"
   },
   registerButton: {
-    marginTop: 10,
+    marginTop: 40,
   },
   registerButtonText: {
-    color: "#FF7F50",
+    color: "#536e2c",
     fontSize: 16,
+    textDecorationLine: "underline"
   },
   loadingContainer: {
     flex: 1,
@@ -157,4 +167,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
+  umaiLogo: {
+    height: 200,
+    width: 200
+  }
 });

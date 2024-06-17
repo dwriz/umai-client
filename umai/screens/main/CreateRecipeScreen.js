@@ -12,9 +12,11 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreateRecipeScreen({ navigation }) {
   const [name, setName] = useState("");
@@ -35,6 +37,15 @@ export default function CreateRecipeScreen({ navigation }) {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      setIsLoggedIn(false);
+    } catch (error) {
+      Alert.alert("Error", error.message);
     }
   }
 
@@ -152,13 +163,39 @@ export default function CreateRecipeScreen({ navigation }) {
   }
 
   return (
+    <SafeAreaView style={styles.safeArea}>
+
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+
+
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <View style={styles.headerContainer}>
+        <View style={styles.umaiHeaderContainer}>
+          <Image
+            style={styles.umaiImage}
+            source={require("../../assets/umai_text.png")}
+          ></Image>
+        </View>
+        <View style={styles.logoutContainer}>
+          <Button
+            icon="logout"
+            mode="contained"
+            buttonColor="#c07f24"
+            textColor="#FFEDD3"
+            onPress={handleLogout}
+            style={styles.logoutButton}
+          >
+            <Text style={styles.buttonText}>Logout</Text>
+            
+            </Button>
+        </View>
+      </View>
+      <Text style={styles.sectionTitle}>Recipe Name</Text>
         <TextInput
-          style={styles.input}
+          style={styles.input1}
           placeholder="Enter name"
           value={name}
           onChangeText={setName}
@@ -175,27 +212,37 @@ export default function CreateRecipeScreen({ navigation }) {
           </View>
         ) : null}
         <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={[styles.imageButton, imgUrl && styles.disabledButton]}
-            onPress={() => pickImage(setImgUrl)}
-            disabled={!!imgUrl}
-          >
-            <Text style={styles.buttonText}>Upload Recipe Image</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.imageButton, imgUrl && styles.disabledButton]}
-            onPress={() => takePhoto(setImgUrl)}
-            disabled={!!imgUrl}
-          >
-            <Text style={styles.buttonText}>Take Photo</Text>
-          </TouchableOpacity>
+        <TouchableOpacity>
+        <Button
+          icon="upload"
+          mode="contained"
+          textColor="#FFEDD3"
+          style={[styles.imageButton1, imgUrl && styles.disabledButton]}
+          onPress={() => pickImage(setImgUrl)}
+          disabled={!!imgUrl}
+        >
+          <Text style={styles.buttonText}>Upload</Text>
+        </Button>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Button
+          icon="camera"
+          mode="contained"
+          textColor="#FFEDD3"
+          style={[styles.imageButton2, imgUrl && styles.disabledButton]}
+          onPress={() => takePhoto(setImgUrl)}
+          disabled={!!imgUrl}
+        >
+          <Text style={styles.buttonText}>Photo</Text>
+        </Button>
+      </TouchableOpacity>
         </View>
 
         <Text style={styles.sectionTitle}>Ingredients</Text>
         {ingredients.map((ingredient, index) => (
           <View key={index} style={styles.row}>
             <TextInput
-              style={styles.input}
+              style={styles.input2}
               placeholder={`Ingredient ${index + 1}`}
               value={ingredient}
               onChangeText={(text) => {
@@ -237,7 +284,7 @@ export default function CreateRecipeScreen({ navigation }) {
               </View>
             ) : null}
             <TextInput
-              style={styles.input}
+              style={styles.input3}
               placeholder={`Instruction ${index + 1}`}
               value={instruction.description}
               onChangeText={(text) => {
@@ -304,31 +351,60 @@ export default function CreateRecipeScreen({ navigation }) {
         </View>
       )}
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f3e9a9",
   },
   scrollViewContent: {
-    padding: 20,
     alignItems: "center",
   },
-  input: {
-    width: "100%",
+  input1: {
+    width: 320,
     height: 40,
-    borderColor: "#ccc",
+    backgroundColor: "#FFFBDE",
+    borderColor: "#759a3f",
     borderWidth: 1,
     borderRadius: 5,
-    paddingHorizontal: 10,
     marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    padding: 10
   },
+  input2: {
+    width: 320,
+    height: 40,
+    backgroundColor: "#FFFBDE",
+    borderColor: "#759a3f",
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginLeft: 20,
+    marginRight: 10,
+    padding: 10
+  },  
+  input3: {
+    width: 320,
+    height: 40,
+    backgroundColor: "#FFFBDE",
+    borderColor: "#759a3f",
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    padding: 10
+  },
+
+
   button: {
     width: "100%",
     height: 40,
-    backgroundColor: "#FF7F50",
+    backgroundColor: "#c07f24",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -337,7 +413,7 @@ const styles = StyleSheet.create({
   submitButton: {
     width: "100%",
     height: 40,
-    backgroundColor: "#FF7F50",
+    backgroundColor: "#536E2C",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -347,14 +423,23 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-  imageButton: {
-    width: "48%",
-    height: 40,
-    backgroundColor: "#FF7F50",
-    borderRadius: 5,
+  imageButton1: {
+    width: 150,
+    backgroundColor: "#c07f24",
+    borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
+    marginRight: 10
+  },
+  imageButton2: {
+    width: 150,
+    backgroundColor: "#c07f24",
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    marginLeft: 10
   },
   imagePreview: {
     width: 200,
@@ -370,12 +455,13 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%",
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#536E2C",
     marginBottom: 10,
+    marginTop: 10
   },
   instructionCard: {
     width: "100%",
@@ -402,4 +488,39 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: "#ccc",
   },
+  headerContainer: {
+    flex: 1,
+    marginTop: 0,
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    backgroundColor: "#D4D768",
+    borderColor: "#B7D88C"
+  },
+  umaiHeaderContainer: {
+    flex: 1,
+  },
+  umaiImage:{
+    width: 120,
+    height: 30,
+    marginTop: 20,
+    marginBottom: 10,
+    paddingRight: 10
+  },
+  logoutContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginLeft: 60,
+    marginBottom: 8.5
+  },
+  buttonText: {
+    color: "#FFEDD3",
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f3e9a9",
+  }
 });

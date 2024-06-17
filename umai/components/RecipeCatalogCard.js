@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 15,
+    marginTop: 10,
+    marginHorizontal: 10
   },
   image: {
     borderRadius: 10,
@@ -53,11 +55,12 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 15,
     color: "#fff",
   },
   cardText: {
     fontSize: 14,
+    marginVertical: 2,
     color: "#fff",
   },
 });
