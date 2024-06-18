@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,20 +7,23 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  Modal,
+  TextInput,
+  Alert,
 } from "react-native";
-import { Button } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../../context/AuthContext";
 
-export default function ProfileScreen() {
+export default function OtherProfileScreen() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("recipes");
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const [donationModalVisible, setDonationModalVisible] = useState(false);
+  const [donationAmount, setDonationAmount] = useState("");
+  const route = useRoute();
+  const { userId } = route.params;
 
   const navigation = useNavigation();
 
@@ -30,30 +33,55 @@ export default function ProfileScreen() {
     }, [])
   );
 
-  async function handleLogout() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      await AsyncStorage.removeItem("user_id");
-      setIsLoggedIn(false);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
-
   async function fetchUserProfile() {
     try {
       const token = await AsyncStorage.getItem("access_token");
-      const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/self`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/user/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       setUser(data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user profile:", error);
       setLoading(false);
+    }
+  }
+
+  async function handleDonate() {
+    try {
+      const token = await AsyncStorage.getItem("access_token");
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/donate`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            targetUserId: userId,
+            amount: donationAmount,
+          }),
+        }
+      );
+      const result = await response.json();
+
+      if (response.status === 200) {
+        Alert.alert("Success", result.message);
+      } else {
+        Alert.alert("Error", result.message);
+      }
+    } catch (error) {
+      console.error("Error during donation:", error);
+      Alert.alert("Error", "Something went wrong during the donation process.");
+    } finally {
+      setDonationModalVisible(false);
     }
   }
 
@@ -69,31 +97,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-      
-        <View style={styles.headerContainer}>
-          <View style={styles.umaiHeaderContainer}>
-            <Image
-              style={styles.umaiImage}
-              source={require("../../assets/umai_text.png")}
-            ></Image>
-          </View>
-          <View style={styles.logoutContainer}>
-            <Button
-              icon="logout"
-              mode="contained"
-              buttonColor="#c07f24"
-              textColor="#FFEDD3"
-              onPress={handleLogout}
-              style={styles.logoutButton}
-            >
-              <Text style={styles.buttonText}>Logout</Text>
-            </Button>
-          </View>
-        </View>
-
-        <View style={styles.container}>
-
+      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <Image
             source={{ uri: user.profileImgUrl }}
@@ -104,13 +108,11 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.coinContainer}>
-          <FontAwesome5 name="coins" size={24} color="#C07F24" />
-          <Text style={styles.coinText}>{user.balance}</Text>
           <TouchableOpacity
             style={styles.topUpButton}
-            onPress={() => navigation.navigate("TopUpScreen")}
+            onPress={() => setDonationModalVisible(true)}
           >
-            <Text style={styles.topUpButtonText}>Top Up</Text>
+            <Text style={styles.topUpButtonText}>Donate</Text>
           </TouchableOpacity>
         </View>
 
@@ -162,8 +164,40 @@ export default function ProfileScreen() {
                 ))}
           </View>
         </ScrollView>
-          
+
+        <Modal
+          visible={donationModalVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setDonationModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Donate</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Amount"
+                keyboardType="numeric"
+                value={donationAmount}
+                onChangeText={setDonationAmount}
+              />
+              <View style={styles.modalButtonContainer}>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={handleDonate}
+                >
+                  <Text style={styles.modalButtonText}>Donate Now</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setDonationModalVisible(false)}
+                >
+                  <Text style={styles.modalButtonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
+        </Modal>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -172,7 +206,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9EFAE",
+    backgroundColor: "#fff",
   },
   loadingContainer: {
     flex: 1,
@@ -181,8 +215,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginTop: 20
-    // padding: 20,
+    padding: 20,
   },
   profileImage: {
     width: 100,
@@ -193,13 +226,8 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#536E2C"
   },
   username: {
-    fontSize: 16,
-    color: "#6C8E3B",
-  },
-  email: {
     fontSize: 16,
     color: "gray",
   },
@@ -211,18 +239,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 20,
   },
-  coinText: {
-    fontSize: 35,
-    fontWeight: "bold",
-    marginHorizontal: 10,
-  },
   topUpButton: {
     padding: 10,
-    backgroundColor: "#B7D88C",
+    backgroundColor: "#0077b5",
     borderRadius: 10,
   },
   topUpButtonText: {
-    color: "#536E2C",
+    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -235,23 +258,23 @@ const styles = StyleSheet.create({
   recipesButton: {
     flex: 1,
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     marginRight: 10,
   },
   cookedButton: {
     flex: 1,
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     marginLeft: 10,
   },
   activeButton: {
-    backgroundColor: "#6C8E3B",
+    backgroundColor: "#0077b5",
   },
   inactiveButton: {
-    backgroundColor: "#C5CAB0",
+    backgroundColor: "#7fbbda",
   },
   buttonText: {
-    color: "#F9EFAE",
+    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -263,7 +286,7 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: 15,
     borderRadius: 10,
-    backgroundColor: "#F1ECCD",
+    backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -279,42 +302,54 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     fontWeight: "bold",
-    color: "#536E2C"
   },
-  headerContainer: {
-    flex: 1 / 10,
-    marginTop: 0,
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
-    backgroundColor: "#D4D768",
-    borderColor: "#B7D88C",
-  },
-  umaiHeaderContainer: {
+  modalContainer: {
     flex: 1,
-  },
-  umaiImage: {
-    width: 120,
-    height: 30,
-    marginTop: 20,
-    marginBottom: 10,
-    paddingRight: 10,
-  },
-  logoutContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
-    marginLeft: 60,
-    marginBottom: 10,
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#f3e9a9",
+  modalContent: {
+    width: 300,
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
   },
-  listContainer: {
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  input: {
+    width: "100%",
+    height: 40,
+    backgroundColor: "#f9f9f9",
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
     justifyContent: "space-between",
+    width: "100%",
   },
-  logoutButton: {
-    marginBottom: 0,
+  modalButton: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#0077b5",
+    borderRadius: 5,
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  cancelButton: {
+    backgroundColor: "#bbb",
   },
 });

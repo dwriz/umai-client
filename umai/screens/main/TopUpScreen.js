@@ -75,13 +75,27 @@ export default function TopUpScreen({ navigation }) {
 
       if (error) {
         console.error("Error during payment process:", error);
+
         Alert.alert("Error", error.message);
       } else {
+        const token = await AsyncStorage.getItem("access_token");
+
+        await fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/topup`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ amount: selectedAmount.amount }),
+        });
+
         Alert.alert("Success", "Payment was successful!");
+
         navigation.navigate("ProfileScreen");
       }
     } catch (error) {
       console.error("Error during payment process:", error);
+
       Alert.alert("Error", "Something went wrong during the payment process.");
     }
   };

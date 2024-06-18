@@ -33,6 +33,7 @@ export default function RecipeCatalogScreen({ navigation }) {
   async function handleLogout() {
     try {
       await AsyncStorage.removeItem("access_token");
+      await AsyncStorage.removeItem("user_id");
       setIsLoggedIn(false);
     } catch (error) {
       Alert.alert("Error", error.message);

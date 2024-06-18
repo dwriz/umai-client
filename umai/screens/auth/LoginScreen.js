@@ -38,8 +38,9 @@ export default function LoginScreen({ navigation }) {
 
       if (response.ok) {
         const data = await response.json();
-        const { access_token } = data;
+        const { access_token, id } = data;
         await AsyncStorage.setItem("access_token", access_token);
+        await AsyncStorage.setItem("user_id", id);
         Alert.alert("Success", "Login successful!", [{ text: "OK" }]);
         setIsLoggedIn(true);
       } else {

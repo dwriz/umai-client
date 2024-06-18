@@ -5,10 +5,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.js";
 import CreateRecipeScreen from "../screens/main/CreateRecipeScreen.js";
-import FeedScreen from "../screens/main/FeedScreen.js";
 import RankScreen from "../screens/main/RankScreen.js";
 import RecipeStack from "./RecipeStack";
 import ProfileStack from "./ProfileStack";
+import FeedStack from "./FeedStack"; // Make sure to import FeedStack
 
 const Tab = createBottomTabNavigator();
 
@@ -18,6 +18,7 @@ export default function BottomTabNavigator() {
   async function handleLogout() {
     try {
       await AsyncStorage.removeItem("access_token");
+      await AsyncStorage.removeItem("user_id");
       setIsLoggedIn(false);
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -42,7 +43,7 @@ export default function BottomTabNavigator() {
             case "CreateRecipeScreen":
               iconName = "create";
               break;
-            case "FeedScreen":
+            case "FeedStack": // Use FeedStack here
               iconName = "newspaper";
               break;
             case "ProfileStack":
@@ -72,8 +73,8 @@ export default function BottomTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="FeedScreen"
-        component={FeedScreen}
+        name="FeedStack"
+        component={FeedStack}
         options={{
           tabBarLabel: "Feed",
         }}
