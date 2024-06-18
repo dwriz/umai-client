@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontWeight: "bold",
     textAlign: "center",
+    color: "#536E2C"
   },
   headerContainer: {
     flex: 1 / 10,

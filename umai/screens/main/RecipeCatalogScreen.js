@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   textContainer: {
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 10
   },
   subHeaderText: {

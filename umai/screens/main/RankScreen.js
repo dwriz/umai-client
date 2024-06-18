@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 10,
+    marginHorizontal: 10,
     padding: 15,
     backgroundColor: "#F1ECCD",
     borderRadius: 10,
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#6C8E3B",
   },
   buttonText1: {
-    color: "#F9EFAE",
+    color: "#FFEDD3",
     fontWeight: "bold",
   },
   listContainer: {
