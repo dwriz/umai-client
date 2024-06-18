@@ -6,10 +6,11 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity
 } from "react-native";
 import { Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -17,6 +18,7 @@ export default function FeedScreen() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { setIsLoggedIn } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetchPosts();
@@ -61,10 +63,26 @@ export default function FeedScreen() {
     }
   }
 
+  async function navigateToProfile(userId) {
+    try {
+      const loggedInUserId = await AsyncStorage.getItem("user_id");
+      if (userId === loggedInUserId) {
+        navigation.navigate("ProfileStack", { screen: "ProfileScreen" });
+      } else {
+        navigation.navigate("FeedStack", {
+          screen: "OtherProfileScreen",
+          params: { userId },
+        });
+      }
+    } catch (error) {
+      console.error("Error navigating to profile:", error);
+    }
+  }
+
   function renderPost({ item }) {
     return (
-      <>
-        <View style={styles.postContainer}>
+      <View style={styles.postContainer}>
+        <TouchableOpacity onPress={() => navigateToProfile(item.user._id)}>
           <View style={styles.userInfo}>
             <Image
               source={{ uri: item.user.profileImgUrl }}
@@ -75,12 +93,12 @@ export default function FeedScreen() {
               <Text style={styles.username}>@{item.user.username}</Text>
             </View>
           </View>
-          <Image source={{ uri: item.imgUrl }} style={styles.postImage} />
-          <View style={styles.recipeInfo}>
-            <Text style={styles.recipeName}>{item.recipe.name}</Text>
-          </View>
+        </TouchableOpacity>
+        <Image source={{ uri: item.imgUrl }} style={styles.postImage} />
+        <View style={styles.recipeInfo}>
+          <Text style={styles.recipeName}>{item.recipe.name}</Text>
         </View>
-      </>
+      </View>
     );
   }
 
@@ -93,7 +111,6 @@ export default function FeedScreen() {
   }
 
   return (
-    <>
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
         <View style={styles.umaiHeaderContainer}>
@@ -116,16 +133,14 @@ export default function FeedScreen() {
         </View>
       </View>
       <View style={styles.container}>
-
-      <FlatList
-        data={posts}
-        renderItem={renderPost}
-        keyExtractor={(item) => item._id.toString()}
-        contentContainerStyle={styles.listContainer}
-      />
+        <FlatList
+          data={posts}
+          renderItem={renderPost}
+          keyExtractor={(item) => item._id.toString()}
+          contentContainerStyle={styles.listContainer}
+        />
       </View>
     </SafeAreaView>
-    </>
   );
 }
 
@@ -156,13 +171,13 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 10,
     marginTop: 10,
-    marginLeft: 10
+    marginLeft: 10,
   },
   fullname: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#536E2C",
-    marginTop: 8
+    marginTop: 8,
   },
   username: {
     fontSize: 14,
@@ -185,7 +200,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   headerContainer: {
-    flex: 1/10,
+    flex: 1 / 10,
     marginTop: 0,
     flexDirection: "row",
     borderBottomWidth: 1,
@@ -223,7 +238,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   logoutButton: {
-    marginBottom: 0
+    marginBottom: 0,
   },
   container: {
     flex: 1,
