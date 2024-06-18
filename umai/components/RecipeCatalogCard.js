@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 15,
-    color: "#fff",
+    color: "#F1ECCD",
   },
   cardText: {
     fontSize: 14,
     marginVertical: 2,
-    color: "#fff",
+    color: "#F1ECCD",
   },
 });

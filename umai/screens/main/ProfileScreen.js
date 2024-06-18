@@ -70,7 +70,6 @@ export default function ProfileScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>
-      
         <View style={styles.headerContainer}>
           <View style={styles.umaiHeaderContainer}>
             <Image
@@ -93,77 +92,75 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.container}>
-
-        <View style={styles.header}>
-          <Image
-            source={{ uri: user.profileImgUrl }}
-            style={styles.profileImage}
-          />
-          <Text style={styles.name}>{user.fullname}</Text>
-          <Text style={styles.username}>@{user.username}</Text>
-        </View>
-
-        <View style={styles.coinContainer}>
-          <FontAwesome5 name="coins" size={24} color="#C07F24" />
-          <Text style={styles.coinText}>{user.balance}</Text>
-          <TouchableOpacity
-            style={styles.topUpButton}
-            onPress={() => navigation.navigate("TopUpScreen")}
-          >
-            <Text style={styles.topUpButtonText}>Top Up</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.recipesButton,
-              activeSection === "recipes"
-                ? styles.activeButton
-                : styles.inactiveButton,
-            ]}
-            onPress={() => setActiveSection("recipes")}
-          >
-            <Text style={styles.buttonText}>Recipes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.cookedButton,
-              activeSection === "cooked"
-                ? styles.activeButton
-                : styles.inactiveButton,
-            ]}
-            onPress={() => setActiveSection("cooked")}
-          >
-            <Text style={styles.buttonText}>Cooked</Text>
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView>
-          <View style={styles.sectionContainer}>
-            {activeSection === "recipes"
-              ? user.recipes.map((recipe) => (
-                  <View key={recipe._id} style={styles.card}>
-                    <Image
-                      source={{ uri: recipe.imgUrl }}
-                      style={styles.cardImage}
-                    />
-                    <Text style={styles.cardTitle}>{recipe.name}</Text>
-                  </View>
-                ))
-              : user.posts.map((post) => (
-                  <View key={post._id} style={styles.card}>
-                    <Image
-                      source={{ uri: post.imgUrl }}
-                      style={styles.cardImage}
-                    />
-                    <Text style={styles.cardTitle}>{post.recipeName}</Text>
-                  </View>
-                ))}
+          <View style={styles.header}>
+            <Image
+              source={{ uri: user.profileImgUrl }}
+              style={styles.profileImage}
+            />
+            <Text style={styles.name}>{user.fullname}</Text>
+            <Text style={styles.username}>@{user.username}</Text>
           </View>
-        </ScrollView>
-          
+
+          <View style={styles.coinContainer}>
+            <FontAwesome5 name="coins" size={24} color="#C07F24" />
+            <Text style={styles.coinText}>{user.balance}</Text>
+            <TouchableOpacity
+              style={styles.topUpButton}
+              onPress={() => navigation.navigate("TopUpScreen")}
+            >
+              <Text style={styles.topUpButtonText}>Top Up</Text>
+            </TouchableOpacity>
           </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.recipesButton,
+                activeSection === "recipes"
+                  ? styles.activeButton
+                  : styles.inactiveButton,
+              ]}
+              onPress={() => setActiveSection("recipes")}
+            >
+              <Text style={styles.buttonText}>Recipes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.cookedButton,
+                activeSection === "cooked"
+                  ? styles.activeButton
+                  : styles.inactiveButton,
+              ]}
+              onPress={() => setActiveSection("cooked")}
+            >
+              <Text style={styles.buttonText}>Cooked</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView>
+            <View style={styles.sectionContainer}>
+              {activeSection === "recipes"
+                ? user.recipes.map((recipe) => (
+                    <View key={recipe._id} style={styles.card}>
+                      <Image
+                        source={{ uri: recipe.imgUrl }}
+                        style={styles.cardImage}
+                      />
+                      <Text style={styles.cardTitle}>{recipe.name}</Text>
+                    </View>
+                  ))
+                : user.posts.map((post) => (
+                    <View key={post._id} style={styles.card}>
+                      <Image
+                        source={{ uri: post.imgUrl }}
+                        style={styles.cardImage}
+                      />
+                      <Text style={styles.cardTitle}>{post.recipeName}</Text>
+                    </View>
+                  ))}
+            </View>
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -181,7 +178,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginTop: 20
+    marginTop: 20,
     // padding: 20,
   },
   profileImage: {
@@ -193,7 +190,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#536E2C"
+    color: "#536E2C",
   },
   username: {
     fontSize: 16,
@@ -215,6 +212,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: "bold",
     marginHorizontal: 10,
+    color: "#536E2C"
   },
   topUpButton: {
     padding: 10,
@@ -251,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#C5CAB0",
   },
   buttonText: {
-    color: "#F9EFAE",
+    color: "#FFEDD3",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -279,7 +277,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     fontWeight: "bold",
-    color: "#536E2C"
+    color: "#536E2C",
   },
   headerContainer: {
     flex: 1 / 10,

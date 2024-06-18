@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import {
   View,
   Text,
@@ -11,10 +11,12 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function OtherProfileScreen() {
   const [user, setUser] = useState(null);
@@ -24,6 +26,7 @@ export default function OtherProfileScreen() {
   const [donationAmount, setDonationAmount] = useState("");
   const route = useRoute();
   const { userId } = route.params;
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   const navigation = useNavigation();
 
@@ -50,6 +53,16 @@ export default function OtherProfileScreen() {
     } catch (error) {
       console.error("Error fetching user profile:", error);
       setLoading(false);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      await AsyncStorage.removeItem("user_id");
+      setIsLoggedIn(false);
+    } catch (error) {
+      Alert.alert("Error", error.message);
     }
   }
 
@@ -98,106 +111,129 @@ export default function OtherProfileScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            source={{ uri: user.profileImgUrl }}
-            style={styles.profileImage}
-          />
-          <Text style={styles.name}>{user.fullname}</Text>
-          <Text style={styles.username}>@{user.username}</Text>
-        </View>
-
-        <View style={styles.coinContainer}>
-          <TouchableOpacity
-            style={styles.topUpButton}
-            onPress={() => setDonationModalVisible(true)}
-          >
-            <Text style={styles.topUpButtonText}>Donate</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.recipesButton,
-              activeSection === "recipes"
-                ? styles.activeButton
-                : styles.inactiveButton,
-            ]}
-            onPress={() => setActiveSection("recipes")}
-          >
-            <Text style={styles.buttonText}>Recipes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.cookedButton,
-              activeSection === "cooked"
-                ? styles.activeButton
-                : styles.inactiveButton,
-            ]}
-            onPress={() => setActiveSection("cooked")}
-          >
-            <Text style={styles.buttonText}>Cooked</Text>
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView>
-          <View style={styles.sectionContainer}>
-            {activeSection === "recipes"
-              ? user.recipes.map((recipe) => (
-                  <View key={recipe._id} style={styles.card}>
-                    <Image
-                      source={{ uri: recipe.imgUrl }}
-                      style={styles.cardImage}
-                    />
-                    <Text style={styles.cardTitle}>{recipe.name}</Text>
-                  </View>
-                ))
-              : user.posts.map((post) => (
-                  <View key={post._id} style={styles.card}>
-                    <Image
-                      source={{ uri: post.imgUrl }}
-                      style={styles.cardImage}
-                    />
-                    <Text style={styles.cardTitle}>{post.recipeName}</Text>
-                  </View>
-                ))}
+        <View style={styles.headerContainer}>
+          <View style={styles.umaiHeaderContainer}>
+            <Image
+              style={styles.umaiImage}
+              source={require("../../assets/umai_text.png")}
+            ></Image>
           </View>
-        </ScrollView>
+          <View style={styles.logoutContainer}>
+            <Button
+              icon="logout"
+              mode="contained"
+              buttonColor="#c07f24"
+              textColor="#FFEDD3"
+              onPress={handleLogout}
+              style={styles.logoutButton}
+            >
+              <Text style={styles.buttonText}>Logout</Text>
+            </Button>
+          </View>
+        </View>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Image
+              source={{ uri: user.profileImgUrl }}
+              style={styles.profileImage}
+            />
+            <Text style={styles.name}>{user.fullname}</Text>
+            <Text style={styles.username}>@{user.username}</Text>
+          </View>
 
-        <Modal
-          visible={donationModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setDonationModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Donate</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Amount"
-                keyboardType="numeric"
-                value={donationAmount}
-                onChangeText={setDonationAmount}
-              />
-              <View style={styles.modalButtonContainer}>
-                <TouchableOpacity
-                  style={styles.modalButton}
-                  onPress={handleDonate}
-                >
-                  <Text style={styles.modalButtonText}>Donate Now</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.cancelButton]}
-                  onPress={() => setDonationModalVisible(false)}
-                >
-                  <Text style={styles.modalButtonText}>Cancel</Text>
-                </TouchableOpacity>
+          <View style={styles.coinContainer}>
+            <TouchableOpacity
+              style={styles.topUpButton}
+              onPress={() => setDonationModalVisible(true)}
+            >
+              <Text style={styles.topUpButtonText}>Donate</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.recipesButton,
+                activeSection === "recipes"
+                  ? styles.activeButton
+                  : styles.inactiveButton,
+              ]}
+              onPress={() => setActiveSection("recipes")}
+            >
+              <Text style={styles.buttonText}>Recipes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.cookedButton,
+                activeSection === "cooked"
+                  ? styles.activeButton
+                  : styles.inactiveButton,
+              ]}
+              onPress={() => setActiveSection("cooked")}
+            >
+              <Text style={styles.buttonText}>Cooked</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView>
+            <View style={styles.sectionContainer}>
+              {activeSection === "recipes"
+                ? user.recipes.map((recipe) => (
+                    <View key={recipe._id} style={styles.card}>
+                      <Image
+                        source={{ uri: recipe.imgUrl }}
+                        style={styles.cardImage}
+                      />
+                      <Text style={styles.cardTitle}>{recipe.name}</Text>
+                    </View>
+                  ))
+                : user.posts.map((post) => (
+                    <View key={post._id} style={styles.card}>
+                      <Image
+                        source={{ uri: post.imgUrl }}
+                        style={styles.cardImage}
+                      />
+                      <Text style={styles.cardTitle}>{post.recipeName}</Text>
+                    </View>
+                  ))}
+            </View>
+          </ScrollView>
+
+          <Modal
+            visible={donationModalVisible}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setDonationModalVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Donate</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Amount"
+                  placeholderTextColor={"#536E2C"}
+                  keyboardType="numeric"
+                  value={donationAmount}
+                  onChangeText={setDonationAmount}
+                />
+                <View style={styles.modalButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={handleDonate}
+                  >
+                    <Text style={styles.modalButtonText}>Donate Now</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.cancelButton]}
+                    onPress={() => setDonationModalVisible(false)}
+                  >
+                    <Text style={styles.modalButtonText}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -206,16 +242,19 @@ export default function OtherProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F9EFAE",
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
+  safeArea: {
+    flex: 1,
+  },
   header: {
     alignItems: "center",
-    padding: 20,
+    marginTop: 20,
   },
   profileImage: {
     width: 100,
@@ -226,10 +265,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
+    color: "#536E2C",
   },
   username: {
     fontSize: 16,
-    color: "gray",
+    color: "#6C8E3B",
   },
   coinContainer: {
     flexDirection: "row",
@@ -241,11 +281,11 @@ const styles = StyleSheet.create({
   },
   topUpButton: {
     padding: 10,
-    backgroundColor: "#0077b5",
+    backgroundColor: "#B7D88C",
     borderRadius: 10,
   },
   topUpButtonText: {
-    color: "#fff",
+    color: "#536E2C",
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -268,13 +308,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   activeButton: {
-    backgroundColor: "#0077b5",
+    backgroundColor: "#6C8E3B",
   },
   inactiveButton: {
-    backgroundColor: "#7fbbda",
+    backgroundColor: "#C5CAB0",
   },
   buttonText: {
-    color: "#fff",
+    color: "#F9EFAE",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -286,7 +326,7 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: 15,
     borderRadius: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#F1ECCD",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -302,6 +342,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     fontWeight: "bold",
+    color: "#536E2C",
   },
   modalContainer: {
     flex: 1,
@@ -311,7 +352,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: 300,
-    backgroundColor: "#fff",
+    backgroundColor: "#F9EFAE",
     padding: 20,
     borderRadius: 10,
     alignItems: "center",
@@ -320,12 +361,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
+    color: "#536E2C"
   },
   input: {
     width: "100%",
     height: 40,
-    backgroundColor: "#f9f9f9",
-    borderColor: "#ccc",
+    backgroundColor: "#FFFBDE",
+    borderColor: "#536E2C",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -339,17 +381,53 @@ const styles = StyleSheet.create({
   modalButton: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#0077b5",
-    borderRadius: 5,
+    backgroundColor: "#536E2C",
+    borderRadius: 10,
     alignItems: "center",
     marginHorizontal: 5,
   },
   modalButtonText: {
-    color: "#fff",
+    color: "#F1ECCD",
     fontSize: 16,
     fontWeight: "bold",
   },
   cancelButton: {
-    backgroundColor: "#bbb",
+    backgroundColor: "#9F691D",
+  },
+  headerContainer: {
+    flex: 1 / 10,
+    marginTop: 0,
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    backgroundColor: "#D4D768",
+    borderColor: "#B7D88C",
+  },
+  umaiHeaderContainer: {
+    flex: 1,
+  },
+  umaiImage: {
+    width: 120,
+    height: 30,
+    marginTop: 20,
+    marginBottom: 10,
+    paddingRight: 10,
+  },
+  logoutContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginLeft: 60,
+    marginBottom: 10,
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f3e9a9",
+  },
+  listContainer: {
+    justifyContent: "space-between",
+  },
+  logoutButton: {
+    marginBottom: 0,
   },
 });

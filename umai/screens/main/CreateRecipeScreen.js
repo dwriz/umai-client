@@ -165,26 +165,26 @@ export default function CreateRecipeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-          <View style={styles.headerContainer}>
-            <View style={styles.umaiHeaderContainer}>
-              <Image
-                style={styles.umaiImage}
-                source={require("../../assets/umai_text.png")}
-              ></Image>
-            </View>
-            <View style={styles.logoutContainer}>
-              <Button
-                icon="logout"
-                mode="contained"
-                buttonColor="#c07f24"
-                textColor="#FFEDD3"
-                onPress={handleLogout}
-                style={styles.logoutButton}
-              >
-                <Text style={styles.buttonText}>Logout</Text>
-              </Button>
-            </View>
-          </View>
+      <View style={styles.headerContainer}>
+        <View style={styles.umaiHeaderContainer}>
+          <Image
+            style={styles.umaiImage}
+            source={require("../../assets/umai_text.png")}
+          ></Image>
+        </View>
+        <View style={styles.logoutContainer}>
+          <Button
+            icon="logout"
+            mode="contained"
+            buttonColor="#c07f24"
+            textColor="#FFEDD3"
+            onPress={handleLogout}
+            style={styles.logoutButton}
+          >
+            <Text style={styles.buttonText}>Logout</Text>
+          </Button>
+        </View>
+      </View>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -194,6 +194,7 @@ export default function CreateRecipeScreen({ navigation }) {
           <TextInput
             style={styles.input1}
             placeholder="Enter name"
+            placeholderTextColor={"#536E2C"}
             value={name}
             onChangeText={setName}
           />
@@ -204,7 +205,7 @@ export default function CreateRecipeScreen({ navigation }) {
                 style={styles.removeImageButton}
                 onPress={() => handleRemoveImage(setImgUrl)}
               >
-                <Ionicons name="close-circle" size={24} color="red" />
+                <Ionicons name="close-circle" size={20} color="#E97D86" />
               </TouchableOpacity>
             </View>
           ) : null}
@@ -241,6 +242,7 @@ export default function CreateRecipeScreen({ navigation }) {
               <TextInput
                 style={styles.input2}
                 placeholder={`Ingredient ${index + 1}`}
+                placeholderTextColor={"#536E2C"}
                 value={ingredient}
                 onChangeText={(text) => {
                   const newIngredients = [...ingredients];
@@ -250,7 +252,9 @@ export default function CreateRecipeScreen({ navigation }) {
               />
               {index > 0 && (
                 <TouchableOpacity onPress={() => handleRemoveIngredient(index)}>
-                  <Ionicons name="close-circle" size={24} color="red" />
+                  <View style={styles.ionicon}>
+                    <Ionicons name="close-circle" size={20} color="#E97D86" />
+                  </View>
                 </TouchableOpacity>
               )}
             </View>
@@ -276,13 +280,14 @@ export default function CreateRecipeScreen({ navigation }) {
                       setInstructions(newInstructions);
                     }}
                   >
-                    <Ionicons name="close-circle" size={24} color="red" />
+                    <Ionicons name="close-circle" size={20} color="#E97D86" />
                   </TouchableOpacity>
                 </View>
               ) : null}
               <TextInput
                 style={styles.input3}
                 placeholder={`Instruction ${index + 1}`}
+                placeholderTextColor={"#536E2C"}
                 value={instruction.description}
                 onChangeText={(text) => {
                   const newInstructions = [...instructions];
@@ -291,48 +296,54 @@ export default function CreateRecipeScreen({ navigation }) {
                 }}
               />
               <View style={styles.buttonRow}>
-              <TouchableOpacity>
-        <Button
-          icon="upload"
-          mode="contained"
-          textColor="#FFEDD3"
-          style={[styles.imageButton3, instruction.imgUrl && styles.disabledButton]}
-          onPress={() =>
-            pickImage((uri) => {
-              const newInstructions = [...instructions];
-              newInstructions[index].imgUrl = uri;
-              setInstructions(newInstructions);
-            })
-          }
-          disabled={!!instruction.imgUrl}
-        >
-          <Text style={styles.buttonText}>Upload</Text>
-        </Button>
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <Button
-          icon="camera"
-          mode="contained"
-          textColor="#FFEDD3"
-          style={[styles.imageButton4, instruction.imgUrl && styles.disabledButton]}
-          onPress={() =>
-            pickImage((uri) => {
-              const newInstructions = [...instructions];
-              newInstructions[index].imgUrl = uri;
-              setInstructions(newInstructions);
-            })
-          }
-          disabled={!!instruction.imgUrl}
-        >
-          <Text style={styles.buttonText}>Photo</Text>
-        </Button>
-      </TouchableOpacity>
+                <TouchableOpacity>
+                  <Button
+                    icon="upload"
+                    mode="contained"
+                    textColor="#FFEDD3"
+                    style={[
+                      styles.imageButton3,
+                      instruction.imgUrl && styles.disabledButton,
+                    ]}
+                    onPress={() =>
+                      pickImage((uri) => {
+                        const newInstructions = [...instructions];
+                        newInstructions[index].imgUrl = uri;
+                        setInstructions(newInstructions);
+                      })
+                    }
+                    disabled={!!instruction.imgUrl}
+                  >
+                    <Text style={styles.buttonText}>Upload</Text>
+                  </Button>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Button
+                    icon="camera"
+                    mode="contained"
+                    textColor="#FFEDD3"
+                    style={[
+                      styles.imageButton4,
+                      instruction.imgUrl && styles.disabledButton,
+                    ]}
+                    onPress={() =>
+                      pickImage((uri) => {
+                        const newInstructions = [...instructions];
+                        newInstructions[index].imgUrl = uri;
+                        setInstructions(newInstructions);
+                      })
+                    }
+                    disabled={!!instruction.imgUrl}
+                  >
+                    <Text style={styles.buttonText}>Photo</Text>
+                  </Button>
+                </TouchableOpacity>
               </View>
               {index > 0 && (
                 <TouchableOpacity
                   onPress={() => handleRemoveInstruction(index)}
                 >
-                  <Ionicons name="close-circle" size={24} color="red" />
+                  <Ionicons name="close-circle" size={20} color="#E97D86" />
                 </TouchableOpacity>
               )}
             </View>
@@ -370,7 +381,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input1: {
-    width: 320,
+    width: 300,
     height: 40,
     backgroundColor: "#FFFBDE",
     borderColor: "#759a3f",
@@ -382,7 +393,19 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   input2: {
-    width: 320,
+    width: 300,
+    height: 40,
+    backgroundColor: "#FFFBDE",
+    borderColor: "#759a3f",
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 10,
+    padding: 10,
+  },
+  input3: {
+    width: 300,
     height: 40,
     backgroundColor: "#FFFBDE",
     borderColor: "#759a3f",
@@ -393,21 +416,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
     padding: 10,
   },
-  input3: {
-    width: 320,
-    height: 40,
-    backgroundColor: "#FFFBDE",
-    borderColor: "#759a3f",
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    padding: 10,
-  },
 
   button: {
-    width: 320,
+    width: 300,
     height: 40,
     backgroundColor: "#c07f24",
     borderRadius: 20,
@@ -424,21 +435,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginVertical: 30,
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
   imageButton1: {
-    width: 150,
+    width: 140,
     backgroundColor: "#c07f24",
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
-    marginRight: 10,
+    // marginRight: 10,
+    // marginLeft: 10
   },
   imageButton2: {
-    width: 150,
+    width: 140,
     backgroundColor: "#c07f24",
     borderRadius: 30,
     alignItems: "center",
@@ -447,7 +455,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   imageButton3: {
-    width: 150,
+    width: 140,
     backgroundColor: "#c07f24",
     borderRadius: 30,
     alignItems: "center",
@@ -456,14 +464,14 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   imageButton4: {
-    width: 150,
+    width: 140,
     backgroundColor: "#c07f24",
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   imagePreview: {
     width: 200,
@@ -478,7 +486,8 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    gap: 10
   },
   sectionTitle: {
     fontSize: 18,
@@ -513,7 +522,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
   },
   headerContainer: {
-    flex: 1/10,
+    flex: 1 / 10,
     marginTop: 0,
     flexDirection: "row",
     borderBottomWidth: 1,
@@ -546,5 +555,8 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#f3e9a9",
+  },
+  ionicon: {
+    marginBottom: 10,
   },
 });

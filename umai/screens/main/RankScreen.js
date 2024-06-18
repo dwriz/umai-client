@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#6C8E3B",
   },
   buttonText1: {
-    color: "#F9EFAE",
+    color: "#FFEDD3",
     fontWeight: "bold",
   },
   listContainer: {

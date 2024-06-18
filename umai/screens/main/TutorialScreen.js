@@ -268,11 +268,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 14,
+    color: "#536E2C"
   },
   instruction: {
     fontSize: 18,
-    marginBottom: 20,
+    marginBottom: 14,
+    color: "#536E2C"
   },
   button: {
     width: "100%",
@@ -285,7 +287,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   buttonText: {
-    color: "#FFEDD3",
+    color: "#FFFBDE",
     fontSize: 16,
   },
   modalContainer: {
