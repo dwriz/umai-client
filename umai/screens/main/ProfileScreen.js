@@ -52,7 +52,6 @@ export default function ProfileScreen() {
       setUser(data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching user profile:", error);
       setLoading(false);
     }
   }
@@ -140,8 +139,8 @@ export default function ProfileScreen() {
           <ScrollView>
             <View style={styles.sectionContainer}>
               {activeSection === "recipes"
-                ? user.recipes.map((recipe) => (
-                    <View key={recipe._id} style={styles.card}>
+                ? user.recipes.map((recipe, index) => (
+                    <View key={index} style={styles.card}>
                       <Image
                         source={{ uri: recipe.imgUrl }}
                         style={styles.cardImage}
@@ -149,8 +148,8 @@ export default function ProfileScreen() {
                       <Text style={styles.cardTitle}>{recipe.name}</Text>
                     </View>
                   ))
-                : user.posts.map((post) => (
-                    <View key={post._id} style={styles.card}>
+                : user.posts.map((post, index) => (
+                    <View key={index} style={styles.card}>
                       <Image
                         source={{ uri: post.imgUrl }}
                         style={styles.cardImage}
