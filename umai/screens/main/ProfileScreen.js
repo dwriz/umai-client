@@ -8,13 +8,13 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import { Button } from "react-native-paper";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
+import FABLogout from "../../components/ButtonFABLogout";
 
 export default function ProfileScreen() {
   const [user, setUser] = useState(null);
@@ -77,7 +77,7 @@ export default function ProfileScreen() {
               source={require("../../assets/umai_text.png")}
             ></Image>
           </View>
-          <View style={styles.logoutContainer}>
+          {/* <View style={styles.logoutContainer}>
             <Button
               icon="logout"
               mode="contained"
@@ -88,7 +88,7 @@ export default function ProfileScreen() {
             >
               <Text style={styles.buttonText}>Logout</Text>
             </Button>
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.container}>
@@ -161,6 +161,7 @@ export default function ProfileScreen() {
             </View>
           </ScrollView>
         </View>
+        <FABLogout handleLogout={handleLogout} />
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -290,6 +291,8 @@ const styles = StyleSheet.create({
   },
   umaiHeaderContainer: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   umaiImage: {
     width: 120,

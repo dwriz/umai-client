@@ -40,16 +40,6 @@ export default function CreateRecipeScreen({ navigation }) {
     }
   }
 
-  async function handleLogout() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      await AsyncStorage.removeItem("user_id");
-      setIsLoggedIn(false);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
-
   async function takePhoto(setImage) {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -171,18 +161,6 @@ export default function CreateRecipeScreen({ navigation }) {
             style={styles.umaiImage}
             source={require("../../assets/umai_text.png")}
           ></Image>
-        </View>
-        <View style={styles.logoutContainer}>
-          <Button
-            icon="logout"
-            mode="contained"
-            buttonColor="#c07f24"
-            textColor="#FFEDD3"
-            onPress={handleLogout}
-            style={styles.logoutButton}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </Button>
         </View>
       </View>
       <KeyboardAvoidingView
@@ -532,6 +510,8 @@ const styles = StyleSheet.create({
   },
   umaiHeaderContainer: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   umaiImage: {
     width: 120,
@@ -539,13 +519,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
     paddingRight: 10,
-  },
-  logoutContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginLeft: 60,
-    marginBottom: 10,
   },
   buttonText: {
     color: "#FFEDD3",

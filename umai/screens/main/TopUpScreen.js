@@ -28,15 +28,6 @@ export default function TopUpScreen({ navigation }) {
     { amount: 100, price: 3000 },
   ];
 
-  async function handleLogout() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      setIsLoggedIn(false);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
-
   const handleTopUp = async () => {
     if (!selectedAmount) {
       Alert.alert("Error", "Please select an amount to top up.");
@@ -112,18 +103,6 @@ export default function TopUpScreen({ navigation }) {
             style={styles.umaiImage}
             source={require("../../assets/umai_text.png")}
           ></Image>
-        </View>
-        <View style={styles.logoutContainer}>
-          <Button
-            icon="logout"
-            mode="contained"
-            buttonColor="#c07f24"
-            textColor="#FFEDD3"
-            onPress={handleLogout}
-            style={styles.logoutButton}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </Button>
         </View>
       </View>
 
@@ -236,22 +215,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingRight: 10,
   },
-  logoutContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginLeft: 60,
-    marginBottom: 10,
-  },
   safeArea: {
     flex: 1,
     backgroundColor: "#f3e9a9",
   },
   listContainer: {
     justifyContent: "space-between",
-  },
-  logoutButton: {
-    marginBottom: 0,
   },
   buttonText: {
     color: "#F9EFAE",
