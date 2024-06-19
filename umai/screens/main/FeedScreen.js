@@ -6,7 +6,7 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -44,8 +44,10 @@ export default function FeedScreen() {
       );
 
       const data = await response.json();
-
-      setPosts(data);
+      const sortedPosts = data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setPosts(sortedPosts);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 5,
-    marginHorizontal: 12
+    marginHorizontal: 12,
   },
   userInfo: {
     flexDirection: "row",
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#536E2C"
+    color: "#536E2C",
   },
   headerContainer: {
     flex: 1 / 10,
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
   umaiHeaderContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   umaiImage: {
     width: 120,
