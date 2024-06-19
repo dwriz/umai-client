@@ -12,6 +12,7 @@ import { Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AuthContext } from "../../context/AuthContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function RankScreen() {
   const [users, setUsers] = useState([]);
@@ -19,9 +20,11 @@ export default function RankScreen() {
   const [filter, setFilter] = useState("finished");
   const { setIsLoggedIn } = useContext(AuthContext);
 
-  useEffect(() => {
-    fetchRanking();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchRanking();
+    }, [])
+  );
 
   async function fetchRanking() {
     try {
@@ -96,7 +99,7 @@ export default function RankScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-        <View style={styles.headerContainer}>
+      <View style={styles.headerContainer}>
         <View style={styles.umaiHeaderContainer}>
           <Image
             style={styles.umaiImage}
@@ -104,34 +107,34 @@ export default function RankScreen() {
           ></Image>
         </View>
       </View>
-    <View style={styles.container}>
-      <View style={styles.filterContainer}>
-        <TouchableOpacity
-          style={[
-            styles.filterButton,
-            filter === "finished" && styles.activeButton,
-          ]}
-          onPress={() => setFilter("finished")}
-        >
-          <Text style={styles.buttonText1}>By Finished Recipes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.filterButton,
-            filter === "created" && styles.activeButton,
-          ]}
-          onPress={() => setFilter("created")}
-        >
-          <Text style={styles.buttonText1}>By Created Recipes</Text>
-        </TouchableOpacity>
+      <View style={styles.container}>
+        <View style={styles.filterContainer}>
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              filter === "finished" && styles.activeButton,
+            ]}
+            onPress={() => setFilter("finished")}
+          >
+            <Text style={styles.buttonText1}>By Finished Recipes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              filter === "created" && styles.activeButton,
+            ]}
+            onPress={() => setFilter("created")}
+          >
+            <Text style={styles.buttonText1}>By Created Recipes</Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          data={getSortedUsers()}
+          renderItem={renderUser}
+          keyExtractor={(item) => item._id.toString()}
+          contentContainerStyle={styles.listContainer}
+        />
       </View>
-      <FlatList
-        data={getSortedUsers()}
-        renderItem={renderUser}
-        keyExtractor={(item) => item._id.toString()}
-        contentContainerStyle={styles.listContainer}
-      />
-    </View>
     </SafeAreaView>
   );
 }
@@ -174,7 +177,7 @@ const styles = StyleSheet.create({
   fullname: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#536E2C"
+    color: "#536E2C",
   },
   username: {
     fontSize: 14,
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   headerContainer: {
-    flex: 1/10,
+    flex: 1 / 10,
     marginTop: 0,
     flexDirection: "row",
     borderBottomWidth: 1,
@@ -228,7 +231,7 @@ const styles = StyleSheet.create({
   umaiHeaderContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   umaiImage: {
     width: 120,
