@@ -54,15 +54,6 @@ export default function FeedScreen() {
     }
   }
 
-  async function handleLogout() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      setIsLoggedIn(false);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
-
   async function navigateToProfile(userId) {
     try {
       const loggedInUserId = await AsyncStorage.getItem("user_id");
@@ -119,18 +110,6 @@ export default function FeedScreen() {
             source={require("../../assets/umai_text.png")}
           ></Image>
         </View>
-        <View style={styles.logoutContainer}>
-          <Button
-            icon="logout"
-            mode="contained"
-            buttonColor="#c07f24"
-            textColor="#FFEDD3"
-            onPress={handleLogout}
-            style={styles.logoutButton}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </Button>
-        </View>
       </View>
       <View style={styles.container}>
         <FlatList
@@ -159,6 +138,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 5,
+    marginHorizontal: 12
   },
   userInfo: {
     flexDirection: "row",
@@ -211,6 +191,8 @@ const styles = StyleSheet.create({
   },
   umaiHeaderContainer: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   umaiImage: {
     width: 120,
@@ -218,13 +200,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
     paddingRight: 10,
-  },
-  logoutContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginLeft: 60,
-    marginBottom: 10,
   },
   buttonText: {
     color: "#FFEDD3",
@@ -237,9 +212,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     justifyContent: "space-between",
-  },
-  logoutButton: {
-    marginBottom: 0,
   },
   container: {
     flex: 1,

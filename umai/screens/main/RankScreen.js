@@ -46,16 +46,6 @@ export default function RankScreen() {
     }
   }
 
-  async function handleLogout() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      await AsyncStorage.removeItem("user_id");
-      setIsLoggedIn(false);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
-
   function renderUser({ item, index }) {
     const count =
       filter === "finished" ? item.finishedRecipeCount : item.recipes.length;
@@ -112,18 +102,6 @@ export default function RankScreen() {
             style={styles.umaiImage}
             source={require("../../assets/umai_text.png")}
           ></Image>
-        </View>
-        <View style={styles.logoutContainer}>
-          <Button
-            icon="logout"
-            mode="contained"
-            buttonColor="#c07f24"
-            textColor="#FFEDD3"
-            onPress={handleLogout}
-            style={styles.logoutButton}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </Button>
         </View>
       </View>
     <View style={styles.container}>
@@ -249,6 +227,8 @@ const styles = StyleSheet.create({
   },
   umaiHeaderContainer: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   umaiImage: {
     width: 120,
@@ -275,8 +255,5 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     justifyContent: "space-between",
-  },
-  logoutButton: {
-    marginBottom: 0
   },
 });

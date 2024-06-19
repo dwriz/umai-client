@@ -56,16 +56,6 @@ export default function OtherProfileScreen() {
     }
   }
 
-  async function handleLogout() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      await AsyncStorage.removeItem("user_id");
-      setIsLoggedIn(false);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  }
-
   async function handleDonate() {
     try {
       const token = await AsyncStorage.getItem("access_token");
@@ -117,18 +107,6 @@ export default function OtherProfileScreen() {
               style={styles.umaiImage}
               source={require("../../assets/umai_text.png")}
             ></Image>
-          </View>
-          <View style={styles.logoutContainer}>
-            <Button
-              icon="logout"
-              mode="contained"
-              buttonColor="#c07f24"
-              textColor="#FFEDD3"
-              onPress={handleLogout}
-              style={styles.logoutButton}
-            >
-              <Text style={styles.buttonText}>Logout</Text>
-            </Button>
           </View>
         </View>
         <View style={styles.container}>
@@ -405,6 +383,8 @@ const styles = StyleSheet.create({
   },
   umaiHeaderContainer: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
   umaiImage: {
     width: 120,
@@ -413,21 +393,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingRight: 10,
   },
-  logoutContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginLeft: 60,
-    marginBottom: 10,
-  },
   safeArea: {
     flex: 1,
     backgroundColor: "#f3e9a9",
   },
   listContainer: {
     justifyContent: "space-between",
-  },
-  logoutButton: {
-    marginBottom: 0,
   },
 });
